@@ -1,8 +1,4 @@
-#ifdef RV32
 #define DRAM_TOP 0x80800000
-#else
-#define DRAM_TOP 0x200000000
-#endif
 
 .section .text.start, "ax", @progbits
 .globl _start

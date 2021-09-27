@@ -201,10 +201,10 @@ module rocketchip_wrapper(
     input [1:0] M_AXI_MMIO_rresp;
     input M_AXI_MMIO_rlast;
 
-    assign M_AXI_araddr[63:33] = 0;
-    assign M_AXI_awaddr[63:33] = 0;
-    assign M_AXI_MMIO_araddr[63:32] = 0;
-    assign M_AXI_MMIO_awaddr[63:32] = 0;
+    assign M_AXI_araddr[63:32] = 0;
+    assign M_AXI_awaddr[63:32] = 0;
+    assign M_AXI_MMIO_araddr[63:31] = 0;
+    assign M_AXI_MMIO_awaddr[63:31] = 0;
 
     RocketChip top (
         .clock(clk), // 25MHz
@@ -212,7 +212,7 @@ module rocketchip_wrapper(
 
         .io_mem_axi4_ar_valid (M_AXI_arvalid),
         .io_mem_axi4_ar_ready (M_AXI_arready),
-        .io_mem_axi4_ar_bits_addr (M_AXI_araddr[32:0]),
+        .io_mem_axi4_ar_bits_addr (M_AXI_araddr[31:0]),
         .io_mem_axi4_ar_bits_id (M_AXI_arid),
         .io_mem_axi4_ar_bits_size (M_AXI_arsize),
         .io_mem_axi4_ar_bits_len (M_AXI_arlen),
@@ -223,7 +223,7 @@ module rocketchip_wrapper(
         .io_mem_axi4_ar_bits_qos (M_AXI_arqos),
         .io_mem_axi4_aw_valid (M_AXI_awvalid),
         .io_mem_axi4_aw_ready (M_AXI_awready),
-        .io_mem_axi4_aw_bits_addr (M_AXI_awaddr[32:0]),
+        .io_mem_axi4_aw_bits_addr (M_AXI_awaddr[31:0]),
         .io_mem_axi4_aw_bits_id (M_AXI_awid),
         .io_mem_axi4_aw_bits_size (M_AXI_awsize),
         .io_mem_axi4_aw_bits_len (M_AXI_awlen),
@@ -250,7 +250,7 @@ module rocketchip_wrapper(
 
         .io_mmio_axi4_ar_valid (M_AXI_MMIO_arvalid),
         .io_mmio_axi4_ar_ready (M_AXI_MMIO_arready),
-        .io_mmio_axi4_ar_bits_addr (M_AXI_MMIO_araddr[31:0]),
+        .io_mmio_axi4_ar_bits_addr (M_AXI_MMIO_araddr[30:0]),
         .io_mmio_axi4_ar_bits_id (M_AXI_MMIO_arid),
         .io_mmio_axi4_ar_bits_size (M_AXI_MMIO_arsize),
         .io_mmio_axi4_ar_bits_len (M_AXI_MMIO_arlen),
@@ -261,7 +261,7 @@ module rocketchip_wrapper(
         .io_mmio_axi4_ar_bits_qos (M_AXI_MMIO_arqos),
         .io_mmio_axi4_aw_valid (M_AXI_MMIO_awvalid),
         .io_mmio_axi4_aw_ready (M_AXI_MMIO_awready),
-        .io_mmio_axi4_aw_bits_addr (M_AXI_MMIO_awaddr[31:0]),
+        .io_mmio_axi4_aw_bits_addr (M_AXI_MMIO_awaddr[30:0]),
         .io_mmio_axi4_aw_bits_id (M_AXI_MMIO_awid),
         .io_mmio_axi4_aw_bits_size (M_AXI_MMIO_awsize),
         .io_mmio_axi4_aw_bits_len (M_AXI_MMIO_awlen),

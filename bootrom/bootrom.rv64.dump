@@ -42,8 +42,8 @@ Disassembly of section .text.hang:
 
 0000000000010074 <boot_core_hart0>:
    10074:	0005a023          	sw	zero,0(a1)
-   10078:	0010011b          	addiw	sp,zero,1
-   1007c:	02111113          	slli	sp,sp,0x21
+   10078:	1010011b          	addiw	sp,zero,257
+   1007c:	01711113          	slli	sp,sp,0x17
    10080:	00000517          	auipc	a0,0x0
    10084:	32450513          	addi	a0,a0,804 # 103a4 <bootloader>
    10088:	34151073          	csrw	mepc,a0
