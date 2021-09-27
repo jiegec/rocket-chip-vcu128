@@ -44,6 +44,9 @@ src/ip/*/**
 !src/ip/**/*.xci
 !src/other
 !src/other/**
+!src/main
+!src/main/scala
+!src/main/scala/**
 
 # hardware handoff
 hw_handoff/*
@@ -51,3 +54,9 @@ hw_handoff/*
 
 # maintain required directories
 !**/.keep
+
+# rocket chip
+!project/build.properties
+!build.sbt
+!Makefile
+!prologue.v
