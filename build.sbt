@@ -10,10 +10,10 @@ resolvers ++= Seq(
 )
 
 val defaultVersions = Map(
-  "rocketchip" -> "1.2.2",
+  "rocketchip" -> "1.2.6",
   )
 
 libraryDependencies ++= Seq("rocketchip").map {
   dep: String => "edu.berkeley.cs" %% dep % sys.props.getOrElse(dep + "Version", defaultVersions(dep)) }
 
-scalacOptions ++= Seq("-Xsource:2.11")
+scalacOptions ++= Seq("-Xsource:2.11", "-unchecked", "-deprecation")
