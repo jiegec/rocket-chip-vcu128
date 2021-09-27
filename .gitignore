@@ -60,3 +60,4 @@ hw_handoff/*
 !build.sbt
 !Makefile
 !prologue.v
+!bootrom

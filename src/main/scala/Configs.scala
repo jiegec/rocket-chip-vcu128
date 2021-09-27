@@ -15,6 +15,15 @@ import freechips.rocketchip.rocket.{
 import freechips.rocketchip.tile.{RocketTileParams, XLen}
 import freechips.rocketchip.util._
 
+class WithBootROM
+    extends Config((site, here, up) => {
+      case BootROMParams =>
+        BootROMParams(
+          hang = 0x10000, // entry point
+          contentFileName = s"./bootrom/bootrom.rv${site(XLen)}.img"
+        )
+    })
+
 class WithIDBits(n: Int)
     extends Config((site, here, up) => {
       case ExtMem =>
@@ -24,8 +33,8 @@ class WithIDBits(n: Int)
 
 class WithCustomMMIOPort extends Config((site, here, up) => {
   case ExtBus => Some(MasterPortParams(
-                      base = BigInt("200000000", 16),
-                      size = BigInt("100000000", 16),
+                      base = BigInt("90000000", 16),
+                      size = BigInt("10000000", 16),
                       beatBytes = site(MemoryBusKey).beatBytes,
                       idBits = 4))
 })
@@ -43,6 +52,7 @@ class RocketConfig
     new WithJtagDTM ++
     new WithIDBits(5) ++
     new WithNSmallCores(1) ++
+    new WithBootROM ++
     new WithCustomMemPort ++
     new WithCustomMMIOPort ++
     new freechips.rocketchip.system.BaseConfig)
