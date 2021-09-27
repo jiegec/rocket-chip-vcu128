@@ -186,7 +186,7 @@ module rocketchip_wrapper(
     input M_AXI_MMIO_arready;
     output M_AXI_MMIO_arvalid;
     output [4:0] M_AXI_MMIO_arid;
-    output [31:0] M_AXI_MMIO_araddr;
+    output [63:0] M_AXI_MMIO_araddr;
     output [7:0] M_AXI_MMIO_arlen;
     output [2:0] M_AXI_MMIO_arsize;
     output [1:0] M_AXI_MMIO_arburst;

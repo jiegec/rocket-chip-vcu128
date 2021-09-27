@@ -1,7 +1,6 @@
 #include <stdint.h>
-#include <stdlib.h>
 
-const size_t UART_BASE = 0x60600000;
+const uintptr_t UART_BASE = 0x60200000;
 volatile uint8_t *UART_RBR = (uint8_t *)(UART_BASE + 0x1000);
 volatile uint8_t *UART_THR = (uint8_t *)(UART_BASE + 0x1000);
 volatile uint8_t *UART_DLL = (uint8_t *)(UART_BASE + 0x1000); // LCR(7)=1

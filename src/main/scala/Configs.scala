@@ -33,8 +33,8 @@ class WithIDBits(n: Int)
 
 class WithCustomMMIOPort extends Config((site, here, up) => {
   case ExtBus => Some(MasterPortParams(
-                      base = BigInt("90000000", 16),
-                      size = BigInt("10000000", 16),
+                      base = BigInt("60000000", 16),
+                      size = BigInt("a0000000", 16),
                       beatBytes = site(MemoryBusKey).beatBytes,
                       idBits = 4))
 })
