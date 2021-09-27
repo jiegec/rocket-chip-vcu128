@@ -9,7 +9,7 @@ Disassembly of section .text.start:
    10004:	f1402573          	csrr	a0,mhartid
    10008:	00050463          	beqz	a0,10010 <_start+0x10>
    1000c:	0580006f          	j	10064 <boot_core>
-   10010:	00458613          	addi	a2,a1,4 # 2000004 <UART_LSR+0x1fefb40>
+   10010:	00458613          	addi	a2,a1,4 # 2000004 <UART_LSR+0x1fefb48>
    10014:	00100693          	li	a3,1
 
 00010018 <interrupt_loop>:
@@ -56,33 +56,33 @@ Disassembly of section .text.hang:
 Disassembly of section .text:
 
 000100a0 <init_serial>:
-   100a0:	ff010113          	addi	sp,sp,-16 # 807ffff0 <UART_LSR+0x807efb2c>
+   100a0:	ff010113          	addi	sp,sp,-16 # 807ffff0 <UART_LSR+0x807efb34>
    100a4:	00812623          	sw	s0,12(sp)
    100a8:	01010413          	addi	s0,sp,16
    100ac:	000107b7          	lui	a5,0x10
-   100b0:	4b87a783          	lw	a5,1208(a5) # 104b8 <UART_FCR>
+   100b0:	4b07a783          	lw	a5,1200(a5) # 104b0 <UART_FCR>
    100b4:	f8100713          	li	a4,-127
    100b8:	00e78023          	sb	a4,0(a5)
    100bc:	000107b7          	lui	a5,0x10
-   100c0:	4bc7a783          	lw	a5,1212(a5) # 104bc <UART_LCR>
+   100c0:	4b47a783          	lw	a5,1204(a5) # 104b4 <UART_LCR>
    100c4:	f8000713          	li	a4,-128
    100c8:	00e78023          	sb	a4,0(a5)
    100cc:	000107b7          	lui	a5,0x10
-   100d0:	4ac7a783          	lw	a5,1196(a5) # 104ac <UART_DLL>
+   100d0:	4a47a783          	lw	a5,1188(a5) # 104a4 <UART_DLL>
    100d4:	01b00713          	li	a4,27
    100d8:	00e78023          	sb	a4,0(a5)
    100dc:	000107b7          	lui	a5,0x10
-   100e0:	4b47a783          	lw	a5,1204(a5) # 104b4 <UART_DLM>
+   100e0:	4ac7a783          	lw	a5,1196(a5) # 104ac <UART_DLM>
    100e4:	00078023          	sb	zero,0(a5)
    100e8:	000107b7          	lui	a5,0x10
-   100ec:	4bc7a783          	lw	a5,1212(a5) # 104bc <UART_LCR>
+   100ec:	4b47a783          	lw	a5,1204(a5) # 104b4 <UART_LCR>
    100f0:	00300713          	li	a4,3
    100f4:	00e78023          	sb	a4,0(a5)
    100f8:	000107b7          	lui	a5,0x10
-   100fc:	4c07a783          	lw	a5,1216(a5) # 104c0 <UART_MCR>
+   100fc:	4b87a783          	lw	a5,1208(a5) # 104b8 <UART_MCR>
    10100:	00078023          	sb	zero,0(a5)
    10104:	000107b7          	lui	a5,0x10
-   10108:	4b07a783          	lw	a5,1200(a5) # 104b0 <UART_IER>
+   10108:	4a87a783          	lw	a5,1192(a5) # 104a8 <UART_IER>
    1010c:	00078023          	sb	zero,0(a5)
    10110:	00000013          	nop
    10114:	00c12403          	lw	s0,12(sp)
@@ -97,13 +97,13 @@ Disassembly of section .text:
    10130:	fef407a3          	sb	a5,-17(s0)
    10134:	00000013          	nop
    10138:	000107b7          	lui	a5,0x10
-   1013c:	4c47a783          	lw	a5,1220(a5) # 104c4 <UART_LSR>
+   1013c:	4bc7a783          	lw	a5,1212(a5) # 104bc <UART_LSR>
    10140:	0007c783          	lbu	a5,0(a5)
    10144:	0ff7f793          	andi	a5,a5,255
    10148:	0407f793          	andi	a5,a5,64
    1014c:	fe0786e3          	beqz	a5,10138 <putc+0x18>
    10150:	000107b7          	lui	a5,0x10
-   10154:	4a87a783          	lw	a5,1192(a5) # 104a8 <UART_THR>
+   10154:	4a07a783          	lw	a5,1184(a5) # 104a0 <UART_THR>
    10158:	fef44703          	lbu	a4,-17(s0)
    1015c:	00e78023          	sb	a4,0(a5)
    10160:	00000013          	nop
@@ -117,13 +117,13 @@ Disassembly of section .text:
    10178:	01010413          	addi	s0,sp,16
    1017c:	00000013          	nop
    10180:	000107b7          	lui	a5,0x10
-   10184:	4c47a783          	lw	a5,1220(a5) # 104c4 <UART_LSR>
+   10184:	4bc7a783          	lw	a5,1212(a5) # 104bc <UART_LSR>
    10188:	0007c783          	lbu	a5,0(a5)
    1018c:	0ff7f793          	andi	a5,a5,255
    10190:	0017f793          	andi	a5,a5,1
    10194:	fe0786e3          	beqz	a5,10180 <getc+0x10>
    10198:	000107b7          	lui	a5,0x10
-   1019c:	4a47a783          	lw	a5,1188(a5) # 104a4 <UART_RBR>
+   1019c:	49c7a783          	lw	a5,1180(a5) # 1049c <UART_RBR>
    101a0:	0007c783          	lbu	a5,0(a5)
    101a4:	0ff7f793          	andi	a5,a5,255
    101a8:	00078513          	mv	a0,a5
@@ -254,17 +254,17 @@ Disassembly of section .text:
    1037c:	02010413          	addi	s0,sp,32
    10380:	d21ff0ef          	jal	ra,100a0 <init_serial>
    10384:	000107b7          	lui	a5,0x10
-   10388:	47878513          	addi	a0,a5,1144 # 10478 <UART_BASE+0x8>
+   10388:	47078513          	addi	a0,a5,1136 # 10470 <UART_BASE+0x4>
    1038c:	eddff0ef          	jal	ra,10268 <puts>
    10390:	e29ff0ef          	jal	ra,101b8 <getlen>
    10394:	fea42223          	sw	a0,-28(s0)
    10398:	000107b7          	lui	a5,0x10
-   1039c:	48878513          	addi	a0,a5,1160 # 10488 <UART_BASE+0x18>
+   1039c:	48078513          	addi	a0,a5,1152 # 10480 <UART_BASE+0x14>
    103a0:	ec9ff0ef          	jal	ra,10268 <puts>
    103a4:	fe442503          	lw	a0,-28(s0)
    103a8:	f11ff0ef          	jal	ra,102b8 <puthex>
    103ac:	000107b7          	lui	a5,0x10
-   103b0:	49078513          	addi	a0,a5,1168 # 10490 <UART_BASE+0x20>
+   103b0:	48878513          	addi	a0,a5,1160 # 10488 <UART_BASE+0x1c>
    103b4:	eb5ff0ef          	jal	ra,10268 <puts>
    103b8:	800007b7          	lui	a5,0x80000
    103bc:	fef42623          	sw	a5,-20(s0)
@@ -274,7 +274,7 @@ Disassembly of section .text:
    103cc:	00050793          	mv	a5,a0
    103d0:	00078713          	mv	a4,a5
    103d4:	fec42783          	lw	a5,-20(s0)
-   103d8:	00e78023          	sb	a4,0(a5) # 80000000 <UART_LSR+0x7ffefb3c>
+   103d8:	00e78023          	sb	a4,0(a5) # 80000000 <UART_LSR+0x7ffefb44>
    103dc:	fec42783          	lw	a5,-20(s0)
    103e0:	00178793          	addi	a5,a5,1
    103e4:	fef42623          	sw	a5,-20(s0)
@@ -285,12 +285,12 @@ Disassembly of section .text:
    103f8:	fe442783          	lw	a5,-28(s0)
    103fc:	fcf766e3          	bltu	a4,a5,103c8 <bootloader+0x58>
    10400:	000107b7          	lui	a5,0x10
-   10404:	49478513          	addi	a0,a5,1172 # 10494 <UART_BASE+0x24>
+   10404:	48c78513          	addi	a0,a5,1164 # 1048c <UART_BASE+0x20>
    10408:	e61ff0ef          	jal	ra,10268 <puts>
    1040c:	800007b7          	lui	a5,0x80000
    10410:	fef42023          	sw	a5,-32(s0)
    10414:	fe042783          	lw	a5,-32(s0)
-   10418:	000780e7          	jalr	a5 # 80000000 <UART_LSR+0x7ffefb3c>
+   10418:	000780e7          	jalr	a5 # 80000000 <UART_LSR+0x7ffefb44>
    1041c:	00000013          	nop
    10420:	01c12083          	lw	ra,28(sp)
    10424:	01812403          	lw	s0,24(sp)
@@ -304,7 +304,7 @@ Disassembly of section .text:
    1043c:	02010413          	addi	s0,sp,32
    10440:	fea42623          	sw	a0,-20(s0)
    10444:	000107b7          	lui	a5,0x10
-   10448:	49c78513          	addi	a0,a5,1180 # 1049c <UART_BASE+0x2c>
+   10448:	49478513          	addi	a0,a5,1172 # 10494 <UART_BASE+0x28>
    1044c:	e1dff0ef          	jal	ra,10268 <puts>
    10450:	fec42503          	lw	a0,-20(s0)
    10454:	e65ff0ef          	jal	ra,102b8 <puthex>
@@ -316,69 +316,67 @@ Disassembly of section .text:
 
 Disassembly of section .srodata:
 
-00010470 <UART_BASE>:
-   10470:	0000                	unimp
-   10472:	6020                	flw	fs0,64(s0)
-   10474:	0000                	unimp
-	...
+0001046c <UART_BASE>:
+   1046c:	0000                	unimp
+   1046e:	6020                	flw	fs0,64(s0)
 
 Disassembly of section .rodata:
 
-00010478 <.rodata>:
-   10478:	4f4e                	lw	t5,208(sp)
-   1047a:	4220                	lw	s0,64(a2)
-   1047c:	20544f4f          	fnmadd.s	ft10,fs0,ft5,ft4,rmm
-   10480:	4146                	lw	sp,80(sp)
-   10482:	4c49                	li	s8,18
-   10484:	0a0d                	addi	s4,s4,3
+00010470 <.rodata>:
+   10470:	4f4e                	lw	t5,208(sp)
+   10472:	4220                	lw	s0,64(a2)
+   10474:	20544f4f          	fnmadd.s	ft10,fs0,ft5,ft4,rmm
+   10478:	4146                	lw	sp,80(sp)
+   1047a:	4c49                	li	s8,18
+   1047c:	0a0d                	addi	s4,s4,3
+   1047e:	0000                	unimp
+   10480:	454c                	lw	a1,12(a0)
+   10482:	204e                	fld	ft0,208(sp)
+   10484:	0000                	unimp
    10486:	0000                	unimp
-   10488:	454c                	lw	a1,12(a0)
-   1048a:	204e                	fld	ft0,208(sp)
-   1048c:	0000                	unimp
-   1048e:	0000                	unimp
-   10490:	0a0d                	addi	s4,s4,3
+   10488:	0a0d                	addi	s4,s4,3
+   1048a:	0000                	unimp
+   1048c:	4f42                	lw	t5,16(sp)
+   1048e:	0a0d544f          	fnmadd.d	fs0,fs10,ft0,ft1,unknown
    10492:	0000                	unimp
-   10494:	4f42                	lw	t5,16(sp)
-   10496:	0a0d544f          	fnmadd.d	fs0,fs10,ft0,ft1,unknown
-   1049a:	0000                	unimp
-   1049c:	4148                	lw	a0,4(a0)
-   1049e:	544c                	lw	a1,44(s0)
-   104a0:	0020                	addi	s0,sp,8
+   10494:	4148                	lw	a0,4(a0)
+   10496:	544c                	lw	a1,44(s0)
+   10498:	0020                	addi	s0,sp,8
 
 Disassembly of section .sdata:
 
-000104a4 <UART_RBR>:
+0001049c <UART_RBR>:
+   1049c:	1000                	addi	s0,sp,32
+   1049e:	6020                	flw	fs0,64(s0)
+
+000104a0 <UART_THR>:
+   104a0:	1000                	addi	s0,sp,32
+   104a2:	6020                	flw	fs0,64(s0)
+
+000104a4 <UART_DLL>:
    104a4:	1000                	addi	s0,sp,32
    104a6:	6020                	flw	fs0,64(s0)
 
-000104a8 <UART_THR>:
-   104a8:	1000                	addi	s0,sp,32
+000104a8 <UART_IER>:
+   104a8:	1004                	addi	s1,sp,32
    104aa:	6020                	flw	fs0,64(s0)
 
-000104ac <UART_DLL>:
-   104ac:	1000                	addi	s0,sp,32
+000104ac <UART_DLM>:
+   104ac:	1004                	addi	s1,sp,32
    104ae:	6020                	flw	fs0,64(s0)
 
-000104b0 <UART_IER>:
-   104b0:	1004                	addi	s1,sp,32
+000104b0 <UART_FCR>:
+   104b0:	1008                	addi	a0,sp,32
    104b2:	6020                	flw	fs0,64(s0)
 
-000104b4 <UART_DLM>:
-   104b4:	1004                	addi	s1,sp,32
+000104b4 <UART_LCR>:
+   104b4:	100c                	addi	a1,sp,32
    104b6:	6020                	flw	fs0,64(s0)
 
-000104b8 <UART_FCR>:
-   104b8:	1008                	addi	a0,sp,32
+000104b8 <UART_MCR>:
+   104b8:	1010                	addi	a2,sp,32
    104ba:	6020                	flw	fs0,64(s0)
 
-000104bc <UART_LCR>:
-   104bc:	100c                	addi	a1,sp,32
+000104bc <UART_LSR>:
+   104bc:	1014                	addi	a3,sp,32
    104be:	6020                	flw	fs0,64(s0)
-
-000104c0 <UART_MCR>:
-   104c0:	1010                	addi	a2,sp,32
-   104c2:	6020                	flw	fs0,64(s0)
-
-000104c4 <UART_LSR>:
-   104c4:	1014                	addi	a3,sp,32
-   104c6:	6020                	flw	fs0,64(s0)

@@ -2,11 +2,13 @@ bootrom_img = bootrom.rv64.img bootrom.rv32.img
 bootrom_dump = bootrom.rv64.dump bootrom.rv32.dump
 
 GCC=riscv64-unknown-elf-gcc
-CFLAGS_RV64=-mabi=lp64 -march=rv64ima
-CFLAGS_RV32=-mabi=ilp32 -march=rv32ima
+CFLAGS_RV64=-mabi=lp64 -march=rv64ima -DRV64
+CFLAGS_RV32=-mabi=ilp32 -march=rv32ima -DRV32
 CFLAGS=-g
 OBJCOPY=riscv64-unknown-elf-objcopy
 OBJDUMP=riscv64-unknown-elf-objdump
+
+all: img dump
 
 img: $(bootrom_img)
 
