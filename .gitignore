@@ -61,3 +61,4 @@ hw_handoff/*
 !Makefile
 !prologue.v
 !bootrom
+!verilator
