@@ -12,10 +12,6 @@ set_property -dict {PACKAGE_PIN BM29 IOSTANDARD LVCMOS12} [get_ports reset]
 
 #### All the delay numbers have to be provided by the user
 
-#### CCLK max delay is 6.7 ns ; refer Data sheet
-#### We need to consider the max delay for worst case analysis
-set cclk_delay 6.7
-
 #### Following are the SPI device parameters
 #### Max Tco
 set tco_max 7
@@ -33,7 +29,6 @@ set tdata_trace_delay_min 0.25
 set tclk_trace_delay_max 0.2
 set tclk_trace_delay_min 0.2
 create_generated_clock -name clk_sck -source [get_pins -hierarchical *axi_quad_spi_0/ext_spi_clk] [get_pins -hierarchical */CCLK] -edges {3 5 7}
-create_generated_clock -name clk_sck -source [get_pins -filter {REF_PIN_NAME==ext_spi_clk} -of [get_cells -hier -filter {REF_NAME=~axi_quad_spi_0}]] [get_pins -hierarchical */CCLK] -edges {3 5 7}
 set_input_delay -clock clk_sck -max [expr $tco_max + $tdata_trace_delay_max + $tclk_trace_delay_max] [get_pins -hierarchical *STARTUP*/DATA_IN[*]] -clock_fall;
 set_input_delay -clock clk_sck -min [expr $tco_min + $tdata_trace_delay_min + $tclk_trace_delay_min] [get_pins -hierarchical *STARTUP*/DATA_IN[*]] -clock_fall;
 set_multicycle_path 2 -setup -from clk_sck -to [get_clocks -of_objects [get_pins -hierarchical */ext_spi_clk]]
