@@ -22,8 +22,18 @@ Can boot [Custom U-Boot](https://github.com/jiegec/u-boot/tree/rocket-chip-vcu12
 
 ```shell
 # in u-boot
-make rocket-chip-vcu128_defconfig
-make CROSS_COMPILE=riscv64-linux-gnu- -j4
+$ make rocket-chip-vcu128_defconfig
+$ make CROSS_COMPILE=riscv64-linux-gnu- -j4
 # in this repo
-python3 bootrom/boot.py /path/to/u-boot/u-boot.bin /dev/ttyUSB1
+$ python3 bootrom/boot.py /path/to/u-boot/u-boot.bin /dev/ttyUSB1
+U-Boot 2021.07-00003-gfb1465705b (Sep 28 2021 - 15:53:56 +0800)
+
+CPU:   rv64imafdc
+Model: freechips,rocketchip-unknown
+DRAM:  256 MiB
+Loading Environment from nowhere... OK
+In:    serial@60200000
+Out:   serial@60200000
+Err:   serial@60200000
+=> 
 ```
