@@ -51,7 +51,7 @@ class RocketConfig
     extends Config(new WithoutTLMonitors ++
     new WithJtagDTM ++
     new WithIDBits(5) ++
-    new WithNSmallCores(1) ++
+    new WithNBigCores(1) ++
     new WithBootROM ++
     new WithCustomMemPort ++
     new WithCustomMMIOPort ++
