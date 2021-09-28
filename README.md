@@ -17,3 +17,13 @@ Rocket Chip memory mapping:
 4. Memory: 0x8000_0000 ~ 0xFFFF_FFFF
 
 Access uart from USB at /dev/ttyUSB1, baudrate 115200. A virtual reset is available at VIO.
+
+Can boot [Custom U-Boot](https://github.com/jiegec/u-boot/rocket-chip-vcu128):
+
+```shell
+# in u-boot
+make rocket-chip-vcu128_defconfig
+make CROSS_COMPILE=riscv64-linux-gnu- -j4
+# in this repo
+python3 bootrom/boot.py /path/to/u-boot/u-boot.bin /dev/ttyUSB1
+```
