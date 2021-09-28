@@ -7,6 +7,7 @@ import serial
 import select
 import time
 import getopt
+import tqdm
 
 try:
     optlist, args = getopt.getopt(sys.argv[1:], 's')
@@ -27,9 +28,8 @@ try:
     out.write(struct.pack('>I', size))
     with open(args[0], 'rb') as f:
         data = f.read()
-        for i in range(0, len(data), n):
+        for i in tqdm.tqdm(range(0, len(data), n)):
             out.write(data[i:i+n])
-            print('.', end='', flush=True)
             if slow:
                 time.sleep(timeout)
 
