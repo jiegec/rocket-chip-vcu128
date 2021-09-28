@@ -70,7 +70,7 @@ Disassembly of section .text:
    100cc:	00e78023          	sb	a4,0(a5)
    100d0:	000107b7          	lui	a5,0x10
    100d4:	5087b783          	ld	a5,1288(a5) # 10508 <UART_DLL>
-   100d8:	01b00713          	li	a4,27
+   100d8:	03600713          	li	a4,54
    100dc:	00e78023          	sb	a4,0(a5)
    100e0:	000107b7          	lui	a5,0x10
    100e4:	5187b783          	ld	a5,1304(a5) # 10518 <UART_DLM>

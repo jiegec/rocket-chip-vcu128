@@ -15,3 +15,5 @@ Rocket Chip memory mapping:
 2. CLINT: 0x0200_0000
 3. MMIO: 0x6000_0000 ~ 0x7FFF_FFFF
 4. Memory: 0x8000_0000 ~ 0xFFFF_FFFF
+
+Access uart from USB at /dev/ttyUSB1, baudrate 115200. A virtual reset is available at VIO.

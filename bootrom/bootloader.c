@@ -16,8 +16,8 @@ void init_serial() {
   *UART_FCR = 0x81;
   // LCR(7) = 1
   *UART_LCR = 0x80;
-  // 115200: 50M / 16 / 115200 = 27
-  *UART_DLL = 27;
+  // 115200: 100M / 16 / 115200 = 54
+  *UART_DLL = 54;
   *UART_DLM = 0;
   // LCR(7) = 0, 8N1
   *UART_LCR = ~0x80 & 0x03;
