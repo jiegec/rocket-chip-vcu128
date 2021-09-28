@@ -18,7 +18,7 @@ Rocket Chip memory mapping:
 
 Access uart from USB at /dev/ttyUSB1, baudrate 115200. A virtual reset is available at VIO.
 
-Can boot [Custom U-Boot](https://github.com/jiegec/u-boot/rocket-chip-vcu128):
+Can boot [Custom U-Boot](https://github.com/jiegec/u-boot/tree/rocket-chip-vcu128):
 
 ```shell
 # in u-boot
