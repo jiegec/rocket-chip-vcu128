@@ -4,7 +4,7 @@ Port Rocket Chip to VCU128 platform. Based on [rocket2thinpad](https://github.co
 
 AXI Interconnect memory mapping:
 
-1. AXI Quad SPI Ctrl: 0x6010_0000
+1. AXI Quad SPI: 0x6010_0000
 2. AXI UART16550: 0x6020_0000
 3. HBM: 0x8000_0000 ~ 0x8FFF_FFFF
 
