@@ -17,6 +17,23 @@ Rocket Chip memory mapping:
 
 Access uart from USB at /dev/ttyUSB1, baudrate 115200. A virtual reset is available at VIO.
 
+Boot [Custom OpenSBI](https://github.com/jiegec/opensbi/tree/rocket-chip-vcu128):
+
+```shell
+# in opensbi
+$ make CROSS_COMPILE=riscv64-linux-gnu- -j4 PLATFORM=rocket-chip-vcu128
+# in this repo
+$ python3 bootrom/boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_jump.bin /dev/ttyUSB1
+Firmware Base             : 0x80000000
+Firmware Size             : 68 KB
+Runtime SBI Version       : 0.2
+
+Boot HART ID              : 0
+Boot HART Domain          : root
+Boot HART ISA             : rv64imafdcsux
+Boot HART Features        : scounteren,mcounteren
+```
+
 Can boot [Custom U-Boot](https://github.com/jiegec/u-boot/tree/rocket-chip-vcu128):
 
 ```shell
