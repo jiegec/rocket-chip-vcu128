@@ -53,6 +53,7 @@ class RocketConfig
     new WithIDBits(5) ++
     new WithNBigCores(1) ++
     new WithBootROM ++
+    new WithNExtTopInterrupts(3) ++
     new WithCustomMemPort ++
     new WithCustomMMIOPort ++
     new freechips.rocketchip.system.BaseConfig)

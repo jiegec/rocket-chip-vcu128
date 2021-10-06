@@ -113,7 +113,7 @@ module rocketchip_wrapper(
 
     input clk;
     input reset;
-    input [1:0] interrupts;
+    input [2:0] interrupts;
 
     // MEM
     input M_AXI_awready;
@@ -207,7 +207,7 @@ module rocketchip_wrapper(
     assign M_AXI_MMIO_awaddr[63:31] = 0;
 
     RocketChip top (
-        .clock(clk), // 25MHz
+        .clock(clk),
         .reset(reset),
 
         .io_mem_axi4_ar_valid (M_AXI_arvalid),

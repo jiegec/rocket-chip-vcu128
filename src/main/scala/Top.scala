@@ -17,7 +17,7 @@ class RocketChip(implicit val p: Parameters) extends Module {
   require(target.debug.head.systemjtag.size == 1)
 
   val io = IO(new Bundle {
-    val interrupts = Input(UInt(2.W))
+    val interrupts = Input(UInt(p(NExtTopInterrupts).W))
     val mem_axi4 = target.mem_axi4.head.cloneType
     val mmio_axi4 = target.mmio_axi4.head.cloneType
   })
