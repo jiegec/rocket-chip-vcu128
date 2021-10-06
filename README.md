@@ -34,7 +34,7 @@ Boot HART ISA             : rv64imafdcsux
 Boot HART Features        : scounteren,mcounteren
 ```
 
-Can boot [Custom U-Boot](https://github.com/jiegec/u-boot/tree/rocket-chip-vcu128):
+Boot [Custom U-Boot](https://github.com/jiegec/u-boot/tree/rocket-chip-vcu128) in M-mode:
 
 ```shell
 # in u-boot
@@ -52,4 +52,17 @@ In:    serial@60200000
 Out:   serial@60200000
 Err:   serial@60200000
 => 
+```
+
+Boot custom OpenSBI in M-mode with U-Boot in S-mode:
+
+```shell
+# in u-boot
+$ make rocket-chip-vcu128-smode_defconfig
+$ make CROSS_COMPILE=riscv64-linux-gnu- -j4
+# in opensbi
+$ make CROSS_COMPILE=riscv64-linux-gnu- -j4 PLATFORM=rocket-chip-vcu128 FW_PAYLOAD_PATH=$HOME/u-boot/u-boot.bin all
+# in this repo
+$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB1
+# same as above
 ```
