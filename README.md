@@ -8,7 +8,8 @@ AXI Interconnect memory mapping:
 2. AXI UART16550: 0x6020_0000
 3. AXI Ethernet DMA: 0x6030_0000
 4. AXI Ethernet: 0x6040_0000
-5. HBM: 0x8000_0000 ~ 0x9FFF_FFFF
+5. AXI I2C: 0x6050_0000
+6. HBM: 0x8000_0000 ~ 0x9FFF_FFFF
 
 Rocket Chip memory mapping:
 
