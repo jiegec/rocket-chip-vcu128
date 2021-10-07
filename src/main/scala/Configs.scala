@@ -47,10 +47,16 @@ class WithCustomMemPort extends Config((site, here, up) => {
                       idBits = 4), 1))
 })
 
+class WithCFlush extends Config((site, here, up) => {
+  case RocketTilesKey =>
+    up(RocketTilesKey, site).map(x => x.copy(core = x.core.copy(haveCFlush = true)))
+})
+
 class RocketConfig
     extends Config(new WithoutTLMonitors ++
     new WithJtagDTM ++
     new WithIDBits(5) ++
+    new WithCFlush ++
     new WithNBigCores(1) ++
     new WithBootROM ++
     new WithNExtTopInterrupts(3) ++

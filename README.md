@@ -53,6 +53,8 @@ Loading Environment from nowhere... OK
 In:    serial@60200000
 Out:   serial@60200000
 Err:   serial@60200000
+Net:   AXI EMAC: 60400000, phyaddr 3, interface sgmii
+eth0: eth0@60400000
 => 
 ```
 
