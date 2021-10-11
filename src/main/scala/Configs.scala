@@ -52,11 +52,16 @@ class WithCFlush extends Config((site, here, up) => {
     up(RocketTilesKey, site).map(x => x.copy(core = x.core.copy(haveCFlush = true)))
 })
 
+class WithNoDebug extends Config ((site, here, up) => {
+  case DebugModuleKey => None
+})
+
 class RocketConfig
     extends Config(new WithoutTLMonitors ++
     new WithJtagDTM ++
     new WithIDBits(5) ++
     new WithCFlush ++
+    new WithNoDebug ++
     new WithNBigCores(1) ++
     new WithBootROM ++
     new WithNExtTopInterrupts(3) ++
