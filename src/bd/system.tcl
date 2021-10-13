@@ -268,10 +268,12 @@ proc create_root_design { parentCell } {
    CONFIG.ETHERNET_BOARD_INTERFACE {sgmii_lvds} \
    CONFIG.InstantiateBitslice0 {true} \
    CONFIG.MDIO_BOARD_INTERFACE {mdio_mdc} \
-   CONFIG.PHYADDR {3} \
+   CONFIG.PHYADDR {0} \
    CONFIG.PHYRST_BOARD_INTERFACE {Custom} \
    CONFIG.PHYRST_BOARD_INTERFACE_DUMMY_PORT {dummy_port_in} \
    CONFIG.PHY_TYPE {SGMII} \
+   CONFIG.RXCSUM {Full} \
+   CONFIG.TXCSUM {Full} \
    CONFIG.lvdsclkrate {625} \
    CONFIG.rxlane0_placement {DIFF_PAIR_2} \
    CONFIG.rxnibblebitslice0used {false} \
