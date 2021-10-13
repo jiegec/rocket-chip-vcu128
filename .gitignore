@@ -62,3 +62,4 @@ hw_handoff/*
 !prologue.v
 !bootrom
 !verilator
+!software

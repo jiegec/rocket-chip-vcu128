@@ -71,3 +71,26 @@ $ make CROSS_COMPILE=riscv64-linux-gnu- -j4 PLATFORM=rocket-chip-vcu128 FW_PAYLO
 $ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB1
 # same as above
 ```
+
+Run executable from TFTP:
+
+```shell
+# build and launch tftp server
+$ sudo pip3 install -U py3tftp
+$ cd software
+$ make
+$ sudo python3 -m py3tftp -p 69
+# in u-boot
+=> tftpboot 0x80200000 10.0.0.1:uart.img
+Using eth0@60400000 device
+TFTP from server 10.0.0.1; our IP address is 10.0.0.2
+Filename 'uart.img'.
+Load address: 0x80200000
+Loading: #
+         929.7 KiB/s
+done
+Bytes transferred = 952 (3b8 hex)
+=> go 0x80200000
+## Starting application at 0x80200000 ...
+test
+```
