@@ -134,3 +134,37 @@ Load address: 0x82000000
 [    0.384192] [<ffffffff80001814>] ret_from_exception+0x0/0xc
 [    0.387351] ---[ end Kernel panic - not syncing: No working init found.  Try passing init= option to kernel. See Linux Documentation/admin-guide/init.rst for guidance. ]---
 ```
+
+Boot Linux with custom [Buildroot external repo](https://github.com/jiegec/buildroot-external/tree/master/rocket-chip-vcu128):
+
+```shell
+# in buildroot-external
+$ cd rocket-chip-vcu128
+$ ./build.sh
+# in linux
+$ ./build.sh
+# in this repo
+$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB1
+=> run boot_linux
+Using eth0@60400000 device
+TFTP from server 10.0.0.1; our IP address is 10.0.0.2
+Filename 'image.itb'.
+Load address: 0x82000000
+[    1.757872] Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
+[    1.778840] printk: console [ttyS0] disabled
+[    1.782014] 60200000.serial: ttyS0 at MMIO 0x60201000 (irq = 1, base_baud = 6250000) is a 16550A
+[    1.787402] printk: console [ttyS0] enabled
+[    1.787402] printk: console [ttyS0] enabled
+[    1.792138] printk: bootconsole [sbi0] disabled
+[    1.792138] printk: bootconsole [sbi0] disabled
+
+[    1.847546] Freeing unused kernel image (initmem) memory: 2116K
+[    1.851446] Run /init as init process
+Starting syslogd: OK
+Starting klogd: OK
+Running sysctl: OK
+
+Welcome to Buildroot
+buildroot login: root
+Jan  1 00:00:28 login[82]: root login on 'ttyS0'
+```
