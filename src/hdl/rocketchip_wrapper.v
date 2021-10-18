@@ -113,7 +113,7 @@ module rocketchip_wrapper(
 
     input clk;
     input reset;
-    input [2:0] interrupts;
+    input [5:0] interrupts;
 
     // MEM
     input M_AXI_awready;

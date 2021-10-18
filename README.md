@@ -18,6 +18,15 @@ Rocket Chip memory mapping:
 3. MMIO: 0x6000_0000 ~ 0x7FFF_FFFF
 4. Memory: 0x8000_0000 ~ 0xFFFF_FFFF
 
+External interrupt:
+
+1. AXI UART16550
+2. AXI Quad SPI
+3. AXI Ethernet
+4. AXI Ethernet DMA RX
+5. AXI Ethernet DMA TX
+6. AXI I2C
+
 Access uart from USB at /dev/ttyUSB1, baudrate 115200. A virtual reset is available at VIO.
 
 Boot [Custom OpenSBI](https://github.com/jiegec/opensbi/tree/rocket-chip-vcu128):
