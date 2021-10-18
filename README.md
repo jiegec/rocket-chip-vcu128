@@ -94,3 +94,43 @@ Bytes transferred = 952 (3b8 hex)
 ## Starting application at 0x80200000 ...
 test
 ```
+
+Run custom [Linux](https://github.com/jiegec/linux/tree/rocket-chip-vcu128):
+
+```shell
+# in Linux
+# build arch/riscv/boot/image.itb
+$ ./build.sh
+# launch tftp server in arch/riscv/boot
+$ cd arch/riscv/boot
+$ sudo python3 -m py3tftp -p 69
+# in U-Boot
+# build opensbi with u-boot.bin payload
+$ ./build_smode.sh
+# in this repo
+$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB1
+# in U-Boot shell
+=> tftpboot 0x82000000 10.0.0.1:image.itb
+Using eth0@60400000 device
+TFTP from server 10.0.0.1; our IP address is 10.0.0.2
+Filename 'image.itb'.
+Load address: 0x82000000
+=> bootm 0x82000000
+## Loading kernel from FIT Image at 82000000 ...
+   Using 'conf' configuration
+[    0.334581] Run /sbin/init as init process
+[    0.339225] Run /etc/init as init process
+[    0.343753] Run /bin/init as init process
+[    0.348635] Run /bin/sh as init process
+[    0.353252] Kernel panic - not syncing: No working init found.  Try passing init= option to kernel. See Linux Documentation/admin-guide/init.rst for guidance.
+[    0.361108] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.14.0-00002-gbdc6f5f9d850-dirty #39
+[    0.365621] Hardware name: freechips,rocket-chip-vcu128 (DT)
+[    0.368620] Call Trace:
+[    0.369994] [<ffffffff80002d46>] dump_backtrace+0x1c/0x24
+[    0.372992] [<ffffffff8011d0c2>] dump_stack_lvl+0x34/0x48
+[    0.375968] [<ffffffff8011d0ea>] dump_stack+0x14/0x1c
+[    0.378738] [<ffffffff8011b1e6>] panic+0xee/0x264
+[    0.381320] [<ffffffff8011d59e>] kernel_init+0xe8/0xf4
+[    0.384192] [<ffffffff80001814>] ret_from_exception+0x0/0xc
+[    0.387351] ---[ end Kernel panic - not syncing: No working init found.  Try passing init= option to kernel. See Linux Documentation/admin-guide/init.rst for guidance. ]---
+```
