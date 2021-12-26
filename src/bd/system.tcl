@@ -457,19 +457,19 @@ proc create_root_design { parentCell } {
   connect_bd_net -net xlconstant_0_dout [get_bd_pins clk_wiz_0/reset] [get_bd_pins xlconstant_0/dout]
 
   # Create address segments
-  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM00] -force
-  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM00] -force
-  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM00] -force
-  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM01] -force
-  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM01] -force
-  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM01] -force
+  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM08] -force
+  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM08] -force
+  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM08] -force
+  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM09] -force
+  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM09] -force
+  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM09] -force
   assign_bd_address -offset 0x60400000 -range 0x00040000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_ethernet_0/s_axi/Reg0] -force
   assign_bd_address -offset 0x60300000 -range 0x00010000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_ethernet_0_dma/S_AXI_LITE/Reg] -force
   assign_bd_address -offset 0x60500000 -range 0x00010000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_iic_0/S_AXI/Reg] -force
   assign_bd_address -offset 0x60100000 -range 0x00010000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_quad_spi_0/aximm/MEM0] -force
   assign_bd_address -offset 0x60200000 -range 0x00010000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_uart16550_0/S_AXI/Reg] -force
-  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM00] -force
-  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM01] -force
+  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM08] -force
+  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM09] -force
   assign_bd_address -offset 0x60400000 -range 0x00040000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs axi_ethernet_0/s_axi/Reg0] -force
   assign_bd_address -offset 0x60400000 -range 0x00040000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs axi_ethernet_0/s_axi/Reg0] -force
   assign_bd_address -offset 0x60300000 -range 0x00010000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs axi_ethernet_0_dma/S_AXI_LITE/Reg] -force
@@ -480,10 +480,10 @@ proc create_root_design { parentCell } {
   assign_bd_address -offset 0x60100000 -range 0x00010000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs axi_quad_spi_0/aximm/MEM0] -force
   assign_bd_address -offset 0x60200000 -range 0x00010000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs axi_uart16550_0/S_AXI/Reg] -force
   assign_bd_address -offset 0x60200000 -range 0x00010000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs axi_uart16550_0/S_AXI/Reg] -force
-  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM00] -force
-  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM00] -force
-  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM01] -force
-  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM01] -force
+  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM08] -force
+  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM08] -force
+  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM09] -force
+  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM09] -force
 
   # Exclude Address Segments
   exclude_bd_addr_seg -offset 0x60400000 -range 0x00040000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs axi_ethernet_0/s_axi/Reg0]
@@ -491,16 +491,100 @@ proc create_root_design { parentCell } {
   exclude_bd_addr_seg -offset 0x60500000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs axi_iic_0/S_AXI/Reg]
   exclude_bd_addr_seg -offset 0x60100000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs axi_quad_spi_0/aximm/MEM0]
   exclude_bd_addr_seg -offset 0x60200000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs axi_uart16550_0/S_AXI/Reg]
+  exclude_bd_addr_seg -offset 0x00000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM00]
+  exclude_bd_addr_seg -offset 0x10000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM01]
+  exclude_bd_addr_seg -offset 0x20000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM02]
+  exclude_bd_addr_seg -offset 0x30000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM03]
+  exclude_bd_addr_seg -offset 0x40000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM04]
+  exclude_bd_addr_seg -offset 0x50000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM05]
+  exclude_bd_addr_seg -offset 0x60000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM06]
+  exclude_bd_addr_seg -offset 0x70000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM07]
+  exclude_bd_addr_seg -offset 0xA0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM10]
+  exclude_bd_addr_seg -offset 0xB0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM11]
+  exclude_bd_addr_seg -offset 0xC0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM12]
+  exclude_bd_addr_seg -offset 0xD0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM13]
+  exclude_bd_addr_seg -offset 0xE0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM14]
+  exclude_bd_addr_seg -offset 0xF0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM15]
   exclude_bd_addr_seg -offset 0x60400000 -range 0x00040000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs axi_ethernet_0/s_axi/Reg0]
   exclude_bd_addr_seg -offset 0x60300000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs axi_ethernet_0_dma/S_AXI_LITE/Reg]
   exclude_bd_addr_seg -offset 0x60500000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs axi_iic_0/S_AXI/Reg]
   exclude_bd_addr_seg -offset 0x60100000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs axi_quad_spi_0/aximm/MEM0]
   exclude_bd_addr_seg -offset 0x60200000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs axi_uart16550_0/S_AXI/Reg]
+  exclude_bd_addr_seg -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM00]
+  exclude_bd_addr_seg -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM01]
+  exclude_bd_addr_seg -offset 0x20000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM02]
+  exclude_bd_addr_seg -offset 0x30000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM03]
+  exclude_bd_addr_seg -offset 0x40000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM04]
+  exclude_bd_addr_seg -offset 0x50000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM05]
+  exclude_bd_addr_seg -offset 0x60000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM06]
+  exclude_bd_addr_seg -offset 0x70000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM07]
+  exclude_bd_addr_seg -offset 0xA0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM10]
+  exclude_bd_addr_seg -offset 0xB0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM11]
+  exclude_bd_addr_seg -offset 0xC0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM12]
+  exclude_bd_addr_seg -offset 0xD0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM13]
+  exclude_bd_addr_seg -offset 0xE0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM14]
+  exclude_bd_addr_seg -offset 0xF0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM15]
   exclude_bd_addr_seg -offset 0x60400000 -range 0x00040000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs axi_ethernet_0/s_axi/Reg0]
   exclude_bd_addr_seg -offset 0x60300000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs axi_ethernet_0_dma/S_AXI_LITE/Reg]
   exclude_bd_addr_seg -offset 0x60500000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs axi_iic_0/S_AXI/Reg]
   exclude_bd_addr_seg -offset 0x60100000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs axi_quad_spi_0/aximm/MEM0]
   exclude_bd_addr_seg -offset 0x60200000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs axi_uart16550_0/S_AXI/Reg]
+  exclude_bd_addr_seg -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM00]
+  exclude_bd_addr_seg -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM01]
+  exclude_bd_addr_seg -offset 0x20000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM02]
+  exclude_bd_addr_seg -offset 0x30000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM03]
+  exclude_bd_addr_seg -offset 0x40000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM04]
+  exclude_bd_addr_seg -offset 0x50000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM05]
+  exclude_bd_addr_seg -offset 0x60000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM06]
+  exclude_bd_addr_seg -offset 0x70000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM07]
+  exclude_bd_addr_seg -offset 0xA0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM10]
+  exclude_bd_addr_seg -offset 0xB0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM11]
+  exclude_bd_addr_seg -offset 0xC0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM12]
+  exclude_bd_addr_seg -offset 0xD0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM13]
+  exclude_bd_addr_seg -offset 0xE0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM14]
+  exclude_bd_addr_seg -offset 0xF0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM15]
+  exclude_bd_addr_seg -offset 0x00000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM00]
+  exclude_bd_addr_seg -offset 0x10000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM01]
+  exclude_bd_addr_seg -offset 0x20000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM02]
+  exclude_bd_addr_seg -offset 0x30000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM03]
+  exclude_bd_addr_seg -offset 0x40000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM04]
+  exclude_bd_addr_seg -offset 0x50000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM05]
+  exclude_bd_addr_seg -offset 0x60000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM06]
+  exclude_bd_addr_seg -offset 0x70000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM07]
+  exclude_bd_addr_seg -offset 0xA0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM10]
+  exclude_bd_addr_seg -offset 0xB0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM11]
+  exclude_bd_addr_seg -offset 0xC0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM12]
+  exclude_bd_addr_seg -offset 0xD0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM13]
+  exclude_bd_addr_seg -offset 0xE0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM14]
+  exclude_bd_addr_seg -offset 0xF0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM15]
+  exclude_bd_addr_seg -offset 0x00000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM00]
+  exclude_bd_addr_seg -offset 0x10000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM01]
+  exclude_bd_addr_seg -offset 0x20000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM02]
+  exclude_bd_addr_seg -offset 0x30000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM03]
+  exclude_bd_addr_seg -offset 0x40000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM04]
+  exclude_bd_addr_seg -offset 0x50000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM05]
+  exclude_bd_addr_seg -offset 0x60000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM06]
+  exclude_bd_addr_seg -offset 0x70000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM07]
+  exclude_bd_addr_seg -offset 0xA0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM10]
+  exclude_bd_addr_seg -offset 0xB0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM11]
+  exclude_bd_addr_seg -offset 0xC0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM12]
+  exclude_bd_addr_seg -offset 0xD0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM13]
+  exclude_bd_addr_seg -offset 0xE0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM14]
+  exclude_bd_addr_seg -offset 0xF0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM15]
+  exclude_bd_addr_seg -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM00]
+  exclude_bd_addr_seg -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM01]
+  exclude_bd_addr_seg -offset 0x20000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM02]
+  exclude_bd_addr_seg -offset 0x30000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM03]
+  exclude_bd_addr_seg -offset 0x40000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM04]
+  exclude_bd_addr_seg -offset 0x50000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM05]
+  exclude_bd_addr_seg -offset 0x60000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM06]
+  exclude_bd_addr_seg -offset 0x70000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM07]
+  exclude_bd_addr_seg -offset 0xA0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM10]
+  exclude_bd_addr_seg -offset 0xB0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM11]
+  exclude_bd_addr_seg -offset 0xC0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM12]
+  exclude_bd_addr_seg -offset 0xD0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM13]
+  exclude_bd_addr_seg -offset 0xE0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM14]
+  exclude_bd_addr_seg -offset 0xF0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM15]
 
 
   # Restore current instance
