@@ -1,30 +1,12 @@
-bootrom_img = bootrom.rv64.img bootrom.rv32.img
-bootrom_dump = bootrom.rv64.dump bootrom.rv32.dump
+bootrom_img = bootrom.img
 
 GCC=riscv64-unknown-elf-gcc
-CFLAGS_RV64=-mabi=lp64 -march=rv64ima -DRV64
-CFLAGS_RV32=-mabi=ilp32 -march=rv32ima -DRV32
-CFLAGS=-g
 OBJCOPY=riscv64-unknown-elf-objcopy
-OBJDUMP=riscv64-unknown-elf-objdump
 
-all: img dump
-
-img: $(bootrom_img)
-
-dump: $(bootrom_dump)
+all: $(bootrom_img)
 
 %.img: %.elf
-	$(OBJCOPY) -O binary --change-addresses=-0x10000 $< $@
+	$(OBJCOPY) -O binary $< $@
 
-%.rv32.elf: %.S bootloader.c linker.ld
-	$(GCC) $(CFLAGS_RV32) $(CFLAGS) -Tlinker.ld $^ -nostdlib -ffreestanding -static -o $@
-
-%.rv64.elf: %.S bootloader.c linker.ld
-	$(GCC) $(CFLAGS_RV64) $(CFLAGS) -Tlinker.ld $^ -nostdlib -ffreestanding -static -o $@
-
-%.dump: %.elf
-	$(OBJDUMP) -D $< -j .text.start -j .text.hang -j .text -j .srodata -j .rodata -j .sdata > $@
-
-clean:
-	rm -f *.elf *.dump *.img
+%.elf: %.S bootloader.c linker.ld
+	$(GCC) -Tlinker.ld $< bootloader.c -nostdlib -static -Wl,--no-gc-sections -o $@

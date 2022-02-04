@@ -43,10 +43,10 @@ class BscanJTAG extends MultiIOModule {
 
   val posClock: Clock = bscane2.TCK.asClock
   val negClock: Clock = (!bscane2.TCK).asClock
-  /**
-   * This two wire will cross two clock domain,
-   * generated at [[posClock]], used in [[negClock]]
-   **/
+
+  /** This two wire will cross two clock domain, generated at [[posClock]], used
+    * in [[negClock]]
+    */
   val tdiRegisterWire = Wire(Bool())
   val shiftCounterWire = Wire(UInt(7.W))
   withReset(!bscane2.SHIFT) {
@@ -67,11 +67,15 @@ class BscanJTAG extends MultiIOModule {
     withClock(negClock) {
       val negCounter = RegInit(0.U(8.W))
       negCounter := negCounter + 1.U
-      tms := MuxLookup(negCounter, false.B, Array(
-        4.U -> tdiRegisterWire,
-        5.U -> true.B,
-        shiftCounterWire + 7.U -> true.B,
-        shiftCounterWire + 8.U -> true.B)
+      tms := MuxLookup(
+        negCounter,
+        false.B,
+        Array(
+          4.U -> tdiRegisterWire,
+          5.U -> true.B,
+          shiftCounterWire + 7.U -> true.B,
+          shiftCounterWire + 8.U -> true.B
+        )
       )
     }
   }

@@ -1,3 +1,12 @@
 [submodule "digilent-vivado-scripts"]
 	path = digilent-vivado-scripts
 	url = git@github.com:Digilent/digilent-vivado-scripts.git
+[submodule "submodules/rocket-chip"]
+	path = submodules/rocket-chip
+	url = git@github.com:chipsalliance/rocket-chip.git
+[submodule "submodules/api-config-chipsalliance"]
+	path = submodules/api-config-chipsalliance
+	url = git@github.com:chipsalliance/api-config-chipsalliance.git
+[submodule "submodules/berkeley-hardfloat"]
+	path = submodules/berkeley-hardfloat
+	url = git@github.com:ucb-bar/berkeley-hardfloat.git

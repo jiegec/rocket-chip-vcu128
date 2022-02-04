@@ -31,19 +31,21 @@ class RocketChip(implicit val p: Parameters) extends Module {
 
 class RocketTop(implicit p: Parameters)
     extends RocketSubsystem
-    with HasHierarchicalBusTopology
-    with HasPeripheryBootROM
     with HasAsyncExtInterrupts
     with CanHaveMasterAXI4MemPort
     with CanHaveMasterAXI4MMIOPort {
   override lazy val module = new RocketTopModule(this)
+
+  // from freechips.rocketchip.system.ExampleRocketSystem
+  val bootROM = p(BootROMLocated(location)).map {
+    BootROM.attach(_, this, CBUS)
+  }
 }
 
 class RocketTopModule(outer: RocketTop)
     extends RocketSubsystemModuleImp(outer)
     with HasRTCModuleImp
     with HasExtInterruptsModuleImp
-    with HasPeripheryBootROMModuleImp
     with DontTouch {
   lazy val mem_axi4 = outer.mem_axi4
   lazy val mmio_axi4 = outer.mmio_axi4

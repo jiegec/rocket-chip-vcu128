@@ -63,3 +63,4 @@ hw_handoff/*
 !bootrom
 !verilator
 !software
+!submodules
