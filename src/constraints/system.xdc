@@ -8,6 +8,7 @@ set_property -dict {PACKAGE_PIN BK28 IOSTANDARD LVCMOS18} [get_ports jtag_TDI]
 set_property -dict {PACKAGE_PIN BL26 IOSTANDARD LVCMOS18} [get_ports jtag_TDO]
 # uart1_cts
 set_property -dict {PACKAGE_PIN BL27 IOSTANDARD LVCMOS18} [get_ports jtag_TMS]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets jtag_TCK_IBUF]
 
 # below is taken from axi_quad_spi xdc
 
