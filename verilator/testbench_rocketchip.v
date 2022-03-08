@@ -21,7 +21,12 @@
 
 module testbench_rocketchip(
     input clock,
-    input reset
+    input reset,
+
+    input jtag_TCK,
+    input jtag_TMS,
+    input jtag_TDI,
+    output jtag_TDO
     );
 
     rocketchip_wrapper dut (
@@ -49,6 +54,10 @@ module testbench_rocketchip(
         .M_AXI_MMIO_rid(0),
         .M_AXI_MMIO_rdata(0),
         .M_AXI_MMIO_rresp(0),
-        .M_AXI_MMIO_rlast(0)
+        .M_AXI_MMIO_rlast(0),
+        .jtag_TCK(jtag_TCK),
+        .jtag_TMS(jtag_TMS),
+        .jtag_TDI(jtag_TDI),
+        .jtag_TDO(jtag_TDO)
     );
 endmodule
