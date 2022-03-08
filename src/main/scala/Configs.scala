@@ -62,9 +62,14 @@ class WithCFlush
       )
     })
 
-class WithNoDebug
-    extends Config((site, here, up) => { case DebugModuleKey =>
-      None
+class WithCustomJtag
+    extends Config((site, here, up) => { case JtagDTMKey =>
+      new JtagDTMConfig(
+        idcodeVersion = 1,
+        idcodePartNum = 0,
+        idcodeManufId = 0x489, // SiFive
+        debugIdleCycles = 5
+      )
     })
 
 class RocketConfig
@@ -73,6 +78,7 @@ class RocketConfig
         new WithoutTLMonitors ++
         new WithIDBits(5) ++
         new WithCFlush ++
+        new WithCustomJtag ++
         new WithJtagDTM ++
         new WithNBigCores(1) ++
         new WithBootROMResetAddress(0x10000) ++

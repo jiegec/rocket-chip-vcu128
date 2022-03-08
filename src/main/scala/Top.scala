@@ -11,6 +11,7 @@ import freechips.rocketchip.devices.debug.HasPeripheryDebugModuleImp
 import freechips.rocketchip.devices.debug.HasPeripheryDebug
 import freechips.rocketchip.jtag.JTAGIO
 import freechips.rocketchip.devices.debug.Debug
+import freechips.rocketchip.devices.debug.JtagDTMKey
 
 class RocketChip(implicit val p: Parameters) extends Module {
   val config = p(ExtIn)
@@ -31,10 +32,10 @@ class RocketChip(implicit val p: Parameters) extends Module {
   systemJtag.jtag.TMS := io.jtag.TMS
   systemJtag.jtag.TDI := io.jtag.TDI
   io.jtag.TDO := systemJtag.jtag.TDO
-  systemJtag.mfr_id := 0.U
-  systemJtag.part_number := 0.U
-  systemJtag.version := 1.U
-  systemJtag.reset := false.B
+  systemJtag.mfr_id := p(JtagDTMKey).idcodeManufId.U(11.W)
+  systemJtag.part_number := p(JtagDTMKey).idcodePartNum.U(16.W)
+  systemJtag.version := p(JtagDTMKey).idcodeVersion.U(4.W)
+  systemJtag.reset := reset
   target.resetctrl.foreach { rc =>
     rc.hartIsInReset.foreach { _ := reset.asBool() }
   }
