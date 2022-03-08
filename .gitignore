@@ -64,3 +64,4 @@ hw_handoff/*
 !verilator
 !software
 !submodules
+!*.cfg
