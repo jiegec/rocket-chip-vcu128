@@ -7,6 +7,10 @@ import freechips.rocketchip.diplomacy.{LazyModule, LazyModuleImp}
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.util._
 import freechips.rocketchip.tile._
+import freechips.rocketchip.devices.debug.HasPeripheryDebugModuleImp
+import freechips.rocketchip.devices.debug.HasPeripheryDebug
+import freechips.rocketchip.jtag.JTAGIO
+import freechips.rocketchip.devices.debug.Debug
 
 class RocketChip(implicit val p: Parameters) extends Module {
   val config = p(ExtIn)
@@ -19,7 +23,23 @@ class RocketChip(implicit val p: Parameters) extends Module {
     val interrupts = Input(UInt(p(NExtTopInterrupts).W))
     val mem_axi4 = target.mem_axi4.head.cloneType
     val mmio_axi4 = target.mmio_axi4.head.cloneType
+    val jtag = Flipped(new JTAGIO())
   })
+
+  val systemJtag = target.debug.get.systemjtag.get
+  systemJtag.jtag.TCK := io.jtag.TCK
+  systemJtag.jtag.TMS := io.jtag.TMS
+  systemJtag.jtag.TDI := io.jtag.TDI
+  io.jtag.TDO := systemJtag.jtag.TDO
+  systemJtag.mfr_id := 0.U
+  systemJtag.part_number := 0.U
+  systemJtag.version := 1.U
+  systemJtag.reset := false.B
+  target.resetctrl.foreach { rc =>
+    rc.hartIsInReset.foreach { _ := reset.asBool() }
+  }
+
+  Debug.connectDebugClockAndReset(target.debug, clock)
 
   io.mem_axi4 <> target.mem_axi4.head
   io.mmio_axi4 <> target.mmio_axi4.head
@@ -32,6 +52,7 @@ class RocketChip(implicit val p: Parameters) extends Module {
 class RocketTop(implicit p: Parameters)
     extends RocketSubsystem
     with HasAsyncExtInterrupts
+    with HasPeripheryDebug
     with CanHaveMasterAXI4MemPort
     with CanHaveMasterAXI4MMIOPort {
   override lazy val module = new RocketTopModule(this)
@@ -46,6 +67,7 @@ class RocketTopModule(outer: RocketTop)
     extends RocketSubsystemModuleImp(outer)
     with HasRTCModuleImp
     with HasExtInterruptsModuleImp
+    with HasPeripheryDebugModuleImp
     with DontTouch {
   lazy val mem_axi4 = outer.mem_axi4
   lazy val mmio_axi4 = outer.mmio_axi4

@@ -73,7 +73,7 @@ class RocketConfig
         new WithoutTLMonitors ++
         new WithIDBits(5) ++
         new WithCFlush ++
-        new WithNoDebug ++
+        new WithJtagDTM ++
         new WithNBigCores(1) ++
         new WithBootROMResetAddress(0x10000) ++
         new WithNExtTopInterrupts(6) ++ // UART(1) + ETH(1+2) + I2C(1) + SPI(1)

@@ -1,5 +1,10 @@
 set_property -dict {PACKAGE_PIN BM29 IOSTANDARD LVCMOS12} [get_ports reset]
 
+set_property -dict {PACKAGE_PIN BJ28 IOSTANDARD LVCMOS18} [get_ports jtag_TCK] # uart1_txd
+set_property -dict {PACKAGE_PIN BK28 IOSTANDARD LVCMOS18} [get_ports jtag_TDI] # uart1_rxd
+set_property -dict {PACKAGE_PIN BL26 IOSTANDARD LVCMOS18} [get_ports jtag_TDO] # uart1_rts
+set_property -dict {PACKAGE_PIN BL27 IOSTANDARD LVCMOS18} [get_ports jtag_TMS] # uart1_cts
+
 # below is taken from axi_quad_spi xdc
 
 ## IOB constraints ######

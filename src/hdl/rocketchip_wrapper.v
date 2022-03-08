@@ -108,7 +108,13 @@ module rocketchip_wrapper(
     M_AXI_MMIO_rid,
     M_AXI_MMIO_rdata,
     M_AXI_MMIO_rresp,
-    M_AXI_MMIO_rlast
+    M_AXI_MMIO_rlast,
+
+    // JTAG
+    jtag_TCK,
+    jtag_TMS,
+    jtag_TDI,
+    jtag_TDO
     );
 
     input clk;
@@ -206,6 +212,12 @@ module rocketchip_wrapper(
     assign M_AXI_MMIO_araddr[63:31] = 0;
     assign M_AXI_MMIO_awaddr[63:31] = 0;
 
+    // jtag
+    input jtag_TCK;
+    input jtag_TMS;
+    input jtag_TDI;
+    output jtag_TDO;
+
     RocketChip top (
         .clock(clk),
         .reset(reset),
@@ -286,6 +298,11 @@ module rocketchip_wrapper(
         .io_mmio_axi4_r_bits_data (M_AXI_MMIO_rdata),
         .io_mmio_axi4_r_bits_last (M_AXI_MMIO_rlast),
 
-        .io_interrupts(interrupts)
+        .io_interrupts(interrupts),
+
+        .io_jtag_TCK(jtag_TCK),
+        .io_jtag_TMS(jtag_TMS),
+        .io_jtag_TDI(jtag_TDI),
+        .io_jtag_TDO_data(jtag_TDO)
     );
 endmodule
