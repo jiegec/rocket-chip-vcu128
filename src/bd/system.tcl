@@ -329,7 +329,7 @@ proc create_root_design { parentCell } {
   # Create instance: axi_uart16550_0, and set properties
   set axi_uart16550_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uart16550:2.0 axi_uart16550_0 ]
   set_property -dict [ list \
-   CONFIG.UART_BOARD_INTERFACE {rs232_uart_0} \
+   CONFIG.UART_BOARD_INTERFACE {rs232_uart_1} \
    CONFIG.USE_BOARD_FLOW {true} \
  ] $axi_uart16550_0
 
@@ -570,7 +570,6 @@ proc create_root_design { parentCell } {
   # Restore current instance
   current_bd_instance $oldCurInst
 
-  validate_bd_design
   save_bd_design
 }
 # End of create_root_design()
@@ -582,4 +581,6 @@ proc create_root_design { parentCell } {
 
 create_root_design ""
 
+
+common::send_gid_msg -ssname BD::TCL -id 2053 -severity "WARNING" "This Tcl script was generated from a block design that has not been validated. It is possible that design <$design_name> may result in errors during validation."
 
