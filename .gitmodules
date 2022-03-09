@@ -10,3 +10,6 @@
 [submodule "submodules/berkeley-hardfloat"]
 	path = submodules/berkeley-hardfloat
 	url = git@github.com:ucb-bar/berkeley-hardfloat.git
+[submodule "submodules/verilog-axi"]
+	path = submodules/verilog-axi
+	url = git@github.com:alexforencich/verilog-axi.git
