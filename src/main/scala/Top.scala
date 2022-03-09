@@ -17,6 +17,10 @@ class RocketChip(implicit val p: Parameters) extends Module {
   val config = p(ExtIn)
   val target = Module(LazyModule(new RocketTop).module)
 
+  // ndreset can reset all harts
+  val childReset = reset.asBool | target.debug.map(_.ndreset).getOrElse(false.B)
+  target.reset := childReset
+
   require(target.mem_axi4.size == 1)
   require(target.mmio_axi4.size == 1)
 
@@ -35,9 +39,12 @@ class RocketChip(implicit val p: Parameters) extends Module {
   systemJtag.mfr_id := p(JtagDTMKey).idcodeManufId.U(11.W)
   systemJtag.part_number := p(JtagDTMKey).idcodePartNum.U(16.W)
   systemJtag.version := p(JtagDTMKey).idcodeVersion.U(4.W)
-  systemJtag.reset := reset
+  // MUST use async reset here
+  // otherwise the internal logic(e.g. TLXbar) might not function
+  // if reset deasserted before TCK rises
+  systemJtag.reset := reset.asAsyncReset
   target.resetctrl.foreach { rc =>
-    rc.hartIsInReset.foreach { _ := reset.asBool() }
+    rc.hartIsInReset.foreach { _ := childReset }
   }
 
   Debug.connectDebugClockAndReset(target.debug, clock)
