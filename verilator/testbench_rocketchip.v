@@ -116,6 +116,94 @@ module testbench_rocketchip(
         .s_axi_rvalid(M_AXI_rvalid),
         .s_axi_rready(M_AXI_rready)
     );
+    
+    // MMIO
+    wire M_AXI_MMIO_awready;
+    wire M_AXI_MMIO_awvalid;
+    wire [4:0] M_AXI_MMIO_awid;
+    wire [63:0] M_AXI_MMIO_awaddr;
+    wire [7:0] M_AXI_MMIO_awlen;
+    wire [2:0] M_AXI_MMIO_awsize;
+    wire [1:0] M_AXI_MMIO_awburst;
+    wire M_AXI_MMIO_awlock;
+    wire [3:0] M_AXI_MMIO_awcache;
+    wire [2:0] M_AXI_MMIO_awprot;
+    wire [3:0] M_AXI_MMIO_awqos;
+
+    wire M_AXI_MMIO_wready;
+    wire M_AXI_MMIO_wvalid;
+    wire [63:0] M_AXI_MMIO_wdata;
+    wire [7:0] M_AXI_MMIO_wstrb;
+    wire M_AXI_MMIO_wlast;
+
+    wire M_AXI_MMIO_bready;
+    wire M_AXI_MMIO_bvalid;
+    wire [4:0] M_AXI_MMIO_bid;
+    wire [1:0] M_AXI_MMIO_bresp;
+
+    wire M_AXI_MMIO_arready;
+    wire M_AXI_MMIO_arvalid;
+    wire [4:0] M_AXI_MMIO_arid;
+    wire [63:0] M_AXI_MMIO_araddr;
+    wire [7:0] M_AXI_MMIO_arlen;
+    wire [2:0] M_AXI_MMIO_arsize;
+    wire [1:0] M_AXI_MMIO_arburst;
+    wire M_AXI_MMIO_arlock;
+    wire [3:0] M_AXI_MMIO_arcache;
+    wire [2:0] M_AXI_MMIO_arprot;
+    wire [3:0] M_AXI_MMIO_arqos;
+
+    wire M_AXI_MMIO_rready;
+    wire M_AXI_MMIO_rvalid;
+    wire [4:0] M_AXI_MMIO_rid;
+    wire [63:0] M_AXI_MMIO_rdata;
+    wire [1:0] M_AXI_MMIO_rresp;
+    wire M_AXI_MMIO_rlast;
+
+    axi_ram fake_mmio (
+        .clk(clock),
+        .rst(reset),
+
+        .s_axi_awid(M_AXI_MMIO_awid),
+        .s_axi_awaddr(M_AXI_MMIO_awaddr),
+        .s_axi_awlen(M_AXI_MMIO_awlen),
+        .s_axi_awsize(M_AXI_MMIO_awsize),
+        .s_axi_awburst(M_AXI_MMIO_awburst),
+        .s_axi_awlock(M_AXI_MMIO_awlock),
+        .s_axi_awcache(M_AXI_MMIO_awcache),
+        .s_axi_awprot(M_AXI_MMIO_awprot),
+        .s_axi_awvalid(M_AXI_MMIO_awvalid),
+        .s_axi_awready(M_AXI_MMIO_awready),
+
+        .s_axi_wdata(M_AXI_MMIO_wdata),
+        .s_axi_wstrb(M_AXI_MMIO_wstrb),
+        .s_axi_wlast(M_AXI_MMIO_wlast),
+        .s_axi_wvalid(M_AXI_MMIO_wvalid),
+        .s_axi_wready(M_AXI_MMIO_wready),
+        
+        .s_axi_bid(M_AXI_MMIO_bid),
+        .s_axi_bresp(M_AXI_MMIO_bresp),
+        .s_axi_bvalid(M_AXI_MMIO_bvalid),
+        .s_axi_bready(M_AXI_MMIO_bready),
+        
+        .s_axi_arid(M_AXI_MMIO_arid),
+        .s_axi_araddr(M_AXI_MMIO_araddr),
+        .s_axi_arlen(M_AXI_MMIO_arlen),
+        .s_axi_arsize(M_AXI_MMIO_arsize),
+        .s_axi_arburst(M_AXI_MMIO_arburst),
+        .s_axi_arlock(M_AXI_MMIO_arlock),
+        .s_axi_arcache(M_AXI_MMIO_arcache),
+        .s_axi_arprot(M_AXI_MMIO_arprot),
+        .s_axi_arvalid(M_AXI_MMIO_arvalid),
+        .s_axi_arready(M_AXI_MMIO_arready),
+        
+        .s_axi_rid(M_AXI_MMIO_rid),
+        .s_axi_rdata(M_AXI_MMIO_rdata),
+        .s_axi_rresp(M_AXI_MMIO_rresp),
+        .s_axi_rlast(M_AXI_MMIO_rlast),
+        .s_axi_rvalid(M_AXI_MMIO_rvalid),
+        .s_axi_rready(M_AXI_MMIO_rready)
+    );
 
     rocketchip_wrapper dut (
         .clk(clock),
@@ -164,17 +252,48 @@ module testbench_rocketchip(
         .M_AXI_rresp(M_AXI_rresp),
         .M_AXI_rlast(M_AXI_rlast),
 
-        .M_AXI_MMIO_awready(0),
-        .M_AXI_MMIO_wready(0),
-        .M_AXI_MMIO_bvalid(0),
-        .M_AXI_MMIO_bid(0),
-        .M_AXI_MMIO_bresp(0),
-        .M_AXI_MMIO_arready(0),
-        .M_AXI_MMIO_rvalid(0),
-        .M_AXI_MMIO_rid(0),
-        .M_AXI_MMIO_rdata(0),
-        .M_AXI_MMIO_rresp(0),
-        .M_AXI_MMIO_rlast(0),
+        .M_AXI_MMIO_awready(M_AXI_MMIO_awready),
+        .M_AXI_MMIO_awvalid(M_AXI_MMIO_awvalid),
+        .M_AXI_MMIO_awid(M_AXI_MMIO_awid),
+        .M_AXI_MMIO_awaddr(M_AXI_MMIO_awaddr),
+        .M_AXI_MMIO_awlen(M_AXI_MMIO_awlen),
+        .M_AXI_MMIO_awsize(M_AXI_MMIO_awsize),
+        .M_AXI_MMIO_awburst(M_AXI_MMIO_awburst),
+        .M_AXI_MMIO_awlock(M_AXI_MMIO_awlock),
+        .M_AXI_MMIO_awcache(M_AXI_MMIO_awcache),
+        .M_AXI_MMIO_awprot(M_AXI_MMIO_awprot),
+        .M_AXI_MMIO_awqos(M_AXI_MMIO_awqos),
+
+        .M_AXI_MMIO_wready(M_AXI_MMIO_wready),
+        .M_AXI_MMIO_wvalid(M_AXI_MMIO_wvalid),
+        .M_AXI_MMIO_wdata(M_AXI_MMIO_wdata),
+        .M_AXI_MMIO_wstrb(M_AXI_MMIO_wstrb),
+        .M_AXI_MMIO_wlast(M_AXI_MMIO_wlast),
+
+        .M_AXI_MMIO_bready(M_AXI_MMIO_bready),
+        .M_AXI_MMIO_bvalid(M_AXI_MMIO_bvalid),
+        .M_AXI_MMIO_bid(M_AXI_MMIO_bid),
+        .M_AXI_MMIO_bresp(M_AXI_MMIO_bresp),
+
+        .M_AXI_MMIO_arready(M_AXI_MMIO_arready),
+        .M_AXI_MMIO_arvalid(M_AXI_MMIO_arvalid),
+        .M_AXI_MMIO_arid(M_AXI_MMIO_arid),
+        .M_AXI_MMIO_araddr(M_AXI_MMIO_araddr),
+        .M_AXI_MMIO_arlen(M_AXI_MMIO_arlen),
+        .M_AXI_MMIO_arsize(M_AXI_MMIO_arsize),
+        .M_AXI_MMIO_arburst(M_AXI_MMIO_arburst),
+        .M_AXI_MMIO_arlock(M_AXI_MMIO_arlock),
+        .M_AXI_MMIO_arcache(M_AXI_MMIO_arcache),
+        .M_AXI_MMIO_arprot(M_AXI_MMIO_arprot),
+        .M_AXI_MMIO_arqos(M_AXI_MMIO_arqos),
+
+        .M_AXI_MMIO_rready(M_AXI_MMIO_rready),
+        .M_AXI_MMIO_rvalid(M_AXI_MMIO_rvalid),
+        .M_AXI_MMIO_rid(M_AXI_MMIO_rid),
+        .M_AXI_MMIO_rdata(M_AXI_MMIO_rdata),
+        .M_AXI_MMIO_rresp(M_AXI_MMIO_rresp),
+        .M_AXI_MMIO_rlast(M_AXI_MMIO_rlast),
+
         .jtag_TCK(jtag_TCK),
         .jtag_TMS(jtag_TMS),
         .jtag_TDI(jtag_TDI),
