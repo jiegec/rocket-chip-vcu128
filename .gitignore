@@ -65,3 +65,4 @@ hw_handoff/*
 !software
 !submodules
 !*.cfg
+!build.sc
