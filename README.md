@@ -27,7 +27,7 @@ External interrupt:
 5. AXI Ethernet DMA TX
 6. AXI I2C
 
-Access uart from USB at /dev/ttyUSB1, baudrate 115200. A virtual reset is available at VIO.
+Access uart from USB at /dev/ttyUSB2, baudrate 115200. A virtual reset is available at VIO.
 
 Boot [Custom OpenSBI](https://github.com/jiegec/opensbi/tree/rocket-chip-vcu128):
 
@@ -35,7 +35,7 @@ Boot [Custom OpenSBI](https://github.com/jiegec/opensbi/tree/rocket-chip-vcu128)
 # in opensbi
 $ make CROSS_COMPILE=riscv64-linux-gnu- -j4 PLATFORM=rocket-chip-vcu128
 # in this repo
-$ python3 bootrom/boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_jump.bin /dev/ttyUSB1
+$ python3 bootrom/boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_jump.bin /dev/ttyUSB2
 Firmware Base             : 0x80000000
 Firmware Size             : 68 KB
 Runtime SBI Version       : 0.2
@@ -53,7 +53,7 @@ Boot [Custom U-Boot](https://github.com/jiegec/u-boot/tree/rocket-chip-vcu128) i
 $ make rocket-chip-vcu128_defconfig
 $ make CROSS_COMPILE=riscv64-linux-gnu- -j4
 # in this repo
-$ python3 bootrom/boot.py /path/to/u-boot/u-boot.bin /dev/ttyUSB1
+$ python3 bootrom/boot.py /path/to/u-boot/u-boot.bin /dev/ttyUSB2
 U-Boot 2021.07-00003-gfb1465705b (Sep 28 2021 - 15:53:56 +0800)
 
 CPU:   rv64imafdc
@@ -77,7 +77,7 @@ $ make CROSS_COMPILE=riscv64-linux-gnu- -j4
 # in opensbi
 $ make CROSS_COMPILE=riscv64-linux-gnu- -j4 PLATFORM=rocket-chip-vcu128 FW_PAYLOAD_PATH=$HOME/u-boot/u-boot.bin all
 # in this repo
-$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB1
+$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB2
 # same as above
 ```
 
@@ -117,7 +117,7 @@ $ sudo python3 -m py3tftp -p 69
 # build opensbi with u-boot.bin payload
 $ ./build_smode.sh
 # in this repo
-$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB1
+$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB2
 # in U-Boot shell
 => tftpboot 0x82000000 10.0.0.1:image.itb
 Using eth0@60400000 device
@@ -153,7 +153,7 @@ $ ./build.sh
 # in linux
 $ ./build.sh
 # in this repo
-$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB1
+$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB2
 => run boot_linux
 Using eth0@60400000 device
 TFTP from server 10.0.0.1; our IP address is 10.0.0.2
