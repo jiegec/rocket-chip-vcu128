@@ -24,6 +24,7 @@ set_max_delay -to [get_ports jtag_TDO] 20.000
 set_max_delay -from [get_ports jtag_TMS] 20.000
 set_max_delay -from [get_ports jtag_TDI] 20.000
 set_clock_groups -asynchronous -group [get_clocks jtag_TCK] -group [get_clocks -of_objects [get_pins system_i/clk_wiz_0/inst/mmcme4_adv_inst/CLKOUT1]]
+set_property ASYNC_REG TRUE [get_cells -hier -regexp "system_i/rocketchip_wrapper_0/.*/cdc_reg_reg.*"]
 
 set_property MARK_DEBUG true [get_nets jtag_TDI]
 set_property MARK_DEBUG true [get_nets jtag_TDO]
