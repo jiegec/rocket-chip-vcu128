@@ -27,7 +27,7 @@ External interrupt:
 5. AXI Ethernet DMA TX
 6. AXI I2C
 
-Access uart from USB at /dev/ttyUSB1, baudrate 115200. A virtual reset is available at VIO.
+Access uart from USB at /dev/ttyUSB2, baudrate 115200. A virtual reset is available at VIO.
 
 Boot [Custom OpenSBI](https://github.com/jiegec/opensbi/tree/rocket-chip-vcu128):
 
@@ -35,7 +35,7 @@ Boot [Custom OpenSBI](https://github.com/jiegec/opensbi/tree/rocket-chip-vcu128)
 # in opensbi
 $ make CROSS_COMPILE=riscv64-linux-gnu- -j4 PLATFORM=rocket-chip-vcu128
 # in this repo
-$ python3 bootrom/boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_jump.bin /dev/ttyUSB1
+$ python3 bootrom/boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_jump.bin /dev/ttyUSB2
 Firmware Base             : 0x80000000
 Firmware Size             : 68 KB
 Runtime SBI Version       : 0.2
@@ -53,7 +53,7 @@ Boot [Custom U-Boot](https://github.com/jiegec/u-boot/tree/rocket-chip-vcu128) i
 $ make rocket-chip-vcu128_defconfig
 $ make CROSS_COMPILE=riscv64-linux-gnu- -j4
 # in this repo
-$ python3 bootrom/boot.py /path/to/u-boot/u-boot.bin /dev/ttyUSB1
+$ python3 bootrom/boot.py /path/to/u-boot/u-boot.bin /dev/ttyUSB2
 U-Boot 2021.07-00003-gfb1465705b (Sep 28 2021 - 15:53:56 +0800)
 
 CPU:   rv64imafdc
@@ -77,7 +77,7 @@ $ make CROSS_COMPILE=riscv64-linux-gnu- -j4
 # in opensbi
 $ make CROSS_COMPILE=riscv64-linux-gnu- -j4 PLATFORM=rocket-chip-vcu128 FW_PAYLOAD_PATH=$HOME/u-boot/u-boot.bin all
 # in this repo
-$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB1
+$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB2
 # same as above
 ```
 
@@ -117,7 +117,7 @@ $ sudo python3 -m py3tftp -p 69
 # build opensbi with u-boot.bin payload
 $ ./build_smode.sh
 # in this repo
-$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB1
+$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB2
 # in U-Boot shell
 => tftpboot 0x82000000 10.0.0.1:image.itb
 Using eth0@60400000 device
@@ -153,7 +153,7 @@ $ ./build.sh
 # in linux
 $ ./build.sh
 # in this repo
-$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB1
+$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB2
 => run boot_linux
 Using eth0@60400000 device
 TFTP from server 10.0.0.1; our IP address is 10.0.0.2
@@ -176,4 +176,48 @@ Running sysctl: OK
 Welcome to Buildroot
 buildroot login: root
 Jan  1 00:00:28 login[82]: root login on 'ttyS0'
+```
+
+Launch OpenOCD & GDB for debugging:
+
+```shell
+$ openocd -f openocd.cfg
+Open On-Chip Debugger 0.11.0-rc2
+Licensed under GNU GPL v2
+For bug reports, read
+        http://openocd.org/doc/doxygen/bugs.html
+Info : auto-selecting first available session transport "jtag". To override use 'transport select <transport>'.
+1
+Info : Listening on port 6666 for tcl connections
+Info : Listening on port 4444 for telnet connections
+Info : clock speed 10000 kHz
+Info : JTAG tap: riscv.cpu tap/device found: 0x10000913 (mfg: 0x489 (SiFive Inc), part: 0x0000, ver: 0x1)
+Info : datacount=2 progbufsize=16
+Info : Disabling abstract command reads from CSRs.
+Info : Examined RISC-V core; found 1 harts
+Info :  hart 0: XLEN=64, misa=0x800000000094112d
+Info : starting gdb server for riscv.cpu.0 on 3333
+Info : Listening on port 3333 for gdb connections
+$ riscv64-unknown-elf-gdb
+GNU gdb (GDB) 12.0.50.20220308-git
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "--host=x86_64-pc-linux-gnu --target=riscv64-unknown-elf".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word".
+(gdb) target extended-remote localhost:3333
+Remote debugging using localhost:3333
+warning: No executable has been specified and target does not support
+determining executable automatically.  Try using the "file" command.
+0x0000000000010106 in ?? ()
+(gdb) 
 ```
