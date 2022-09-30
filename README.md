@@ -1,6 +1,6 @@
 # rocket-chip-vcu128
 
-Port Rocket Chip to VCU128 platform. Based on [rocket2thinpad](https://github.com/jiegec/rocket2thinpad).
+Port Rocket Chip to VCU128 platform. Based on [rocket2thinpad](https://github.com/jiegec/rocket2thinpad). Tested with Vivado 2020.2.
 
 AXI Interconnect memory mapping:
 
