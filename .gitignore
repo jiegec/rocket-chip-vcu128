@@ -66,3 +66,4 @@ hw_handoff/*
 !submodules
 !*.cfg
 !build.sc
+!gdbinit
