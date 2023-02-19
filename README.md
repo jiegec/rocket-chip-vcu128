@@ -29,6 +29,12 @@ External interrupt:
 
 Access uart from USB at /dev/ttyUSB2, baudrate 115200. A virtual reset is available at VIO.
 
+Software modifications:
+
+- [Custom OpenSBI](https://github.com/jiegec/opensbi/tree/rocket-chip-vcu128) [Changes](https://github.com/jiegec/opensbi/compare/master...jiegec:opensbi:rocket-chip-vcu128?expand=1)
+- [Custom U-Boot](https://github.com/jiegec/u-boot/tree/rocket-chip-vcu128) [Changes](https://github.com/jiegec/u-boot/compare/master...jiegec:u-boot:rocket-chip-vcu128?expand=1)
+- [Custom Linux](https://github.com/jiegec/linux/tree/rocket-chip-vcu128) [Changes] (https://github.com/jiegec/linux/compare/master...jiegec:linux:rocket-chip-vcu128?expand=1)
+
 Boot [Custom OpenSBI](https://github.com/jiegec/opensbi/tree/rocket-chip-vcu128):
 
 ```shell
@@ -54,11 +60,11 @@ $ make rocket-chip-vcu128_defconfig
 $ make CROSS_COMPILE=riscv64-linux-gnu- -j4
 # in this repo
 $ python3 bootrom/boot.py /path/to/u-boot/u-boot.bin /dev/ttyUSB2
-U-Boot 2021.07-00003-gfb1465705b (Sep 28 2021 - 15:53:56 +0800)
+U-Boot 2022.01-00028-g83ca2695ae-dirty (Feb 19 2023 - 19:50:19 +0800)
 
 CPU:   rv64imafdc
 Model: freechips,rocketchip-unknown
-DRAM:  256 MiB
+DRAM:  512 MiB
 Loading Environment from nowhere... OK
 In:    serial@60200000
 Out:   serial@60200000
@@ -158,7 +164,7 @@ $ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payloa
 Using eth0@60400000 device
 TFTP from server 10.0.0.1; our IP address is 10.0.0.2
 Filename 'image.itb'.
-Load address: 0x82000000
+Load address: 0x80100000
 [    1.757872] Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
 [    1.778840] printk: console [ttyS0] disabled
 [    1.782014] 60200000.serial: ttyS0 at MMIO 0x60201000 (irq = 1, base_baud = 6250000) is a 16550A
