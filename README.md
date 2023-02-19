@@ -227,3 +227,10 @@ determining executable automatically.  Try using the "file" command.
 0x0000000000010106 in ?? ()
 (gdb) 
 ```
+
+Boot process:
+
+1. Run BootROM in 0x10000, load opensbi+uboot from serial
+2. Run OpenSBI @ 0x80000000, jump to U-Boot at 0x80020000
+3. U-Boot relocates to high address, load Linux kernel + dts from network at 0x80100000
+4. Copy Linux kernel to 0x82000000 and jump to Linux kernel
