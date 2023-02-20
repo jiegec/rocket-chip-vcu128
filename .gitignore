@@ -67,3 +67,4 @@ hw_handoff/*
 !*.cfg
 !build.sc
 !gdbinit
+!reset.tcl
