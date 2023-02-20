@@ -205,6 +205,84 @@ module testbench_rocketchip(
         .s_axi_rready(M_AXI_MMIO_rready)
     );
 
+    // Slave port
+    wire S_AXI_awready;
+    wire S_AXI_awvalid;
+    wire [4:0] S_AXI_awid;
+    wire [63:0] S_AXI_awaddr;
+    wire [7:0] S_AXI_awlen;
+    wire [2:0] S_AXI_awsize;
+    wire [1:0] S_AXI_awburst;
+    wire S_AXI_awlock;
+    wire [3:0] S_AXI_awcache;
+    wire [2:0] S_AXI_awprot;
+    wire [3:0] S_AXI_awqos;
+
+    wire S_AXI_wready;
+    wire S_AXI_wvalid;
+    wire [63:0] S_AXI_wdata;
+    wire [7:0] S_AXI_wstrb;
+    wire S_AXI_wlast;
+
+    wire S_AXI_bready;
+    wire S_AXI_bvalid;
+    wire [4:0] S_AXI_bid;
+    wire [1:0] S_AXI_bresp;
+
+    wire S_AXI_arready;
+    wire S_AXI_arvalid;
+    wire [4:0] S_AXI_arid;
+    wire [63:0] S_AXI_araddr;
+    wire [7:0] S_AXI_arlen;
+    wire [2:0] S_AXI_arsize;
+    wire [1:0] S_AXI_arburst;
+    wire S_AXI_arlock;
+    wire [3:0] S_AXI_arcache;
+    wire [2:0] S_AXI_arprot;
+    wire [3:0] S_AXI_arqos;
+
+    wire S_AXI_rready;
+    wire S_AXI_rvalid;
+    wire [4:0] S_AXI_rid;
+    wire [63:0] S_AXI_rdata;
+    wire [1:0] S_AXI_rresp;
+    wire S_AXI_rlast;
+
+    reg [3:0] state;
+
+    assign S_AXI_awvalid = 0;
+    assign S_AXI_wvalid = 0;
+    assign S_AXI_bready = 0;
+    assign S_AXI_arvalid = state == 4'b1 || state == 4'd3;
+    assign S_AXI_rready = state == 4'd2 || state == 4'd4;
+    assign S_AXI_araddr = state == 4'b1 ? 32'h10000 : 32'h80000000;
+
+    always @ (posedge clock) begin
+        if (reset) begin
+            state <= 4'b0;
+        end else begin
+            if (state == 4'b0) begin
+                state <= 4'b1;
+            end else if (state == 4'b1) begin
+                if (S_AXI_arvalid && S_AXI_arready) begin
+                    state <= 4'd2;
+                end
+            end else if (state == 4'd2) begin
+                if (S_AXI_rvalid && S_AXI_rready) begin
+                    state <= 4'd3;
+                end
+            end else if (state == 4'd3) begin
+                if (S_AXI_arvalid && S_AXI_arready) begin
+                    state <= 4'd4;
+                end
+            end else if (state == 4'd4) begin
+                if (S_AXI_rvalid && S_AXI_rready) begin
+                    state <= 4'd5;
+                end
+            end
+        end
+    end
+
     rocketchip_wrapper dut (
         .clk(clock),
         .reset(reset),
@@ -293,6 +371,48 @@ module testbench_rocketchip(
         .M_AXI_MMIO_rdata(M_AXI_MMIO_rdata),
         .M_AXI_MMIO_rresp(M_AXI_MMIO_rresp),
         .M_AXI_MMIO_rlast(M_AXI_MMIO_rlast),
+
+        .S_AXI_awready(S_AXI_awready),
+        .S_AXI_awvalid(S_AXI_awvalid),
+        .S_AXI_awid(S_AXI_awid),
+        .S_AXI_awaddr(S_AXI_awaddr),
+        .S_AXI_awlen(S_AXI_awlen),
+        .S_AXI_awsize(S_AXI_awsize),
+        .S_AXI_awburst(S_AXI_awburst),
+        .S_AXI_awlock(S_AXI_awlock),
+        .S_AXI_awcache(S_AXI_awcache),
+        .S_AXI_awprot(S_AXI_awprot),
+        .S_AXI_awqos(S_AXI_awqos),
+
+        .S_AXI_wready(S_AXI_wready),
+        .S_AXI_wvalid(S_AXI_wvalid),
+        .S_AXI_wdata(S_AXI_wdata),
+        .S_AXI_wstrb(S_AXI_wstrb),
+        .S_AXI_wlast(S_AXI_wlast),
+
+        .S_AXI_bready(S_AXI_bready),
+        .S_AXI_bvalid(S_AXI_bvalid),
+        .S_AXI_bid(S_AXI_bid),
+        .S_AXI_bresp(S_AXI_bresp),
+
+        .S_AXI_arready(S_AXI_arready),
+        .S_AXI_arvalid(S_AXI_arvalid),
+        .S_AXI_arid(S_AXI_arid),
+        .S_AXI_araddr(S_AXI_araddr),
+        .S_AXI_arlen(S_AXI_arlen),
+        .S_AXI_arsize(S_AXI_arsize),
+        .S_AXI_arburst(S_AXI_arburst),
+        .S_AXI_arlock(S_AXI_arlock),
+        .S_AXI_arcache(S_AXI_arcache),
+        .S_AXI_arprot(S_AXI_arprot),
+        .S_AXI_arqos(S_AXI_arqos),
+
+        .S_AXI_rready(S_AXI_rready),
+        .S_AXI_rvalid(S_AXI_rvalid),
+        .S_AXI_rid(S_AXI_rid),
+        .S_AXI_rdata(S_AXI_rdata),
+        .S_AXI_rresp(S_AXI_rresp),
+        .S_AXI_rlast(S_AXI_rlast),
 
         .jtag_TCK(jtag_TCK),
         .jtag_TMS(jtag_TMS),

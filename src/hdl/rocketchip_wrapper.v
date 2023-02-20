@@ -386,7 +386,7 @@ module rocketchip_wrapper(
 
         .io_slave_axi4_ar_valid (S_AXI_arvalid),
         .io_slave_axi4_ar_ready (S_AXI_arready),
-        .io_slave_axi4_ar_bits_addr (S_AXI_araddr[30:0]),
+        .io_slave_axi4_ar_bits_addr (S_AXI_araddr),
         .io_slave_axi4_ar_bits_id (S_AXI_arid),
         .io_slave_axi4_ar_bits_size (S_AXI_arsize),
         .io_slave_axi4_ar_bits_len (S_AXI_arlen),
@@ -397,7 +397,7 @@ module rocketchip_wrapper(
         .io_slave_axi4_ar_bits_qos (S_AXI_arqos),
         .io_slave_axi4_aw_valid (S_AXI_awvalid),
         .io_slave_axi4_aw_ready (S_AXI_awready),
-        .io_slave_axi4_aw_bits_addr (S_AXI_awaddr[30:0]),
+        .io_slave_axi4_aw_bits_addr (S_AXI_awaddr),
         .io_slave_axi4_aw_bits_id (S_AXI_awid),
         .io_slave_axi4_aw_bits_size (S_AXI_awsize),
         .io_slave_axi4_aw_bits_len (S_AXI_awlen),
