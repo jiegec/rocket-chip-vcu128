@@ -331,7 +331,7 @@ proc create_root_design { parentCell } {
    CONFIG.C_SCK_RATIO {2} \
    CONFIG.C_SPI_MEMORY {2} \
    CONFIG.C_SPI_MEM_ADDR_BITS {24} \
-   CONFIG.C_SPI_MODE {2} \
+   CONFIG.C_SPI_MODE {0} \
    CONFIG.C_TYPE_OF_AXI4_INTERFACE {1} \
    CONFIG.C_USE_STARTUP {1} \
    CONFIG.C_USE_STARTUP_INT {1} \
