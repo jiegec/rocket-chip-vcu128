@@ -33,7 +33,7 @@ Software modifications:
 
 - [Custom OpenSBI](https://github.com/jiegec/opensbi/tree/rocket-chip-vcu128) [Changes](https://github.com/jiegec/opensbi/compare/master...jiegec:opensbi:rocket-chip-vcu128?expand=1)
 - [Custom U-Boot](https://github.com/jiegec/u-boot/tree/rocket-chip-vcu128) [Changes](https://github.com/jiegec/u-boot/compare/master...jiegec:u-boot:rocket-chip-vcu128?expand=1)
-- [Custom Linux](https://github.com/jiegec/linux/tree/rocket-chip-vcu128) [Changes] (https://github.com/jiegec/linux/compare/master...jiegec:linux:rocket-chip-vcu128?expand=1)
+- [Custom Linux](https://github.com/jiegec/linux/tree/rocket-chip-vcu128) [Changes](https://github.com/jiegec/linux/compare/master...jiegec:linux:rocket-chip-vcu128?expand=1)
 
 Boot [Custom OpenSBI](https://github.com/jiegec/opensbi/tree/rocket-chip-vcu128):
 
