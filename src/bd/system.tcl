@@ -304,11 +304,18 @@ proc create_root_design { parentCell } {
    CONFIG.USE_BOARD_FLOW {true} \
  ] $axi_iic_0
 
+  # Create instance: axi_interconnect_0, and set properties
+  set axi_interconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_0 ]
+  set_property -dict [ list \
+   CONFIG.NUM_MI {1} \
+   CONFIG.NUM_SI {4} \
+ ] $axi_interconnect_0
+
   # Create instance: axi_mem_intercon, and set properties
   set axi_mem_intercon [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_mem_intercon ]
   set_property -dict [ list \
    CONFIG.NUM_MI {6} \
-   CONFIG.NUM_SI {6} \
+   CONFIG.NUM_SI {2} \
  ] $axi_mem_intercon
 
   # Create instance: axi_quad_spi_0, and set properties
@@ -416,14 +423,15 @@ proc create_root_design { parentCell } {
   # Create interface connections
   connect_bd_intf_net -intf_net axi_ethernet_0_dma_M_AXIS_CNTRL [get_bd_intf_pins axi_ethernet_0/s_axis_txc] [get_bd_intf_pins axi_ethernet_0_dma/M_AXIS_CNTRL]
   connect_bd_intf_net -intf_net axi_ethernet_0_dma_M_AXIS_MM2S [get_bd_intf_pins axi_ethernet_0/s_axis_txd] [get_bd_intf_pins axi_ethernet_0_dma/M_AXIS_MM2S]
-  connect_bd_intf_net -intf_net axi_ethernet_0_dma_M_AXI_MM2S [get_bd_intf_pins axi_ethernet_0_dma/M_AXI_MM2S] [get_bd_intf_pins axi_mem_intercon/S03_AXI]
-  connect_bd_intf_net -intf_net axi_ethernet_0_dma_M_AXI_S2MM [get_bd_intf_pins axi_ethernet_0_dma/M_AXI_S2MM] [get_bd_intf_pins axi_mem_intercon/S04_AXI]
-  connect_bd_intf_net -intf_net axi_ethernet_0_dma_M_AXI_SG [get_bd_intf_pins axi_ethernet_0_dma/M_AXI_SG] [get_bd_intf_pins axi_mem_intercon/S05_AXI]
+  connect_bd_intf_net -intf_net axi_ethernet_0_dma_M_AXI_MM2S [get_bd_intf_pins axi_ethernet_0_dma/M_AXI_MM2S] [get_bd_intf_pins axi_interconnect_0/S01_AXI]
+  connect_bd_intf_net -intf_net axi_ethernet_0_dma_M_AXI_S2MM [get_bd_intf_pins axi_ethernet_0_dma/M_AXI_S2MM] [get_bd_intf_pins axi_interconnect_0/S02_AXI]
+  connect_bd_intf_net -intf_net axi_ethernet_0_dma_M_AXI_SG [get_bd_intf_pins axi_ethernet_0_dma/M_AXI_SG] [get_bd_intf_pins axi_interconnect_0/S00_AXI]
   connect_bd_intf_net -intf_net axi_ethernet_0_m_axis_rxd [get_bd_intf_pins axi_ethernet_0/m_axis_rxd] [get_bd_intf_pins axi_ethernet_0_dma/S_AXIS_S2MM]
   connect_bd_intf_net -intf_net axi_ethernet_0_m_axis_rxs [get_bd_intf_pins axi_ethernet_0/m_axis_rxs] [get_bd_intf_pins axi_ethernet_0_dma/S_AXIS_STS]
   connect_bd_intf_net -intf_net axi_ethernet_0_mdio [get_bd_intf_ports mdio_mdc] [get_bd_intf_pins axi_ethernet_0/mdio]
   connect_bd_intf_net -intf_net axi_ethernet_0_sgmii [get_bd_intf_ports sgmii_lvds] [get_bd_intf_pins axi_ethernet_0/sgmii]
   connect_bd_intf_net -intf_net axi_iic_0_IIC [get_bd_intf_ports iic_0] [get_bd_intf_pins axi_iic_0/IIC]
+  connect_bd_intf_net -intf_net axi_interconnect_0_M00_AXI [get_bd_intf_pins axi_interconnect_0/M00_AXI] [get_bd_intf_pins rocketchip_wrapper_0/S_AXI]
   connect_bd_intf_net -intf_net axi_mem_intercon_M00_AXI [get_bd_intf_pins axi_mem_intercon/M00_AXI] [get_bd_intf_pins hbm_0/SAXI_00]
   connect_bd_intf_net -intf_net axi_mem_intercon_M01_AXI [get_bd_intf_pins axi_mem_intercon/M01_AXI] [get_bd_intf_pins axi_quad_spi_0/AXI_FULL]
   connect_bd_intf_net -intf_net axi_mem_intercon_M02_AXI [get_bd_intf_pins axi_mem_intercon/M02_AXI] [get_bd_intf_pins axi_uart16550_0/S_AXI]
@@ -432,13 +440,13 @@ proc create_root_design { parentCell } {
   connect_bd_intf_net -intf_net axi_mem_intercon_M05_AXI [get_bd_intf_pins axi_iic_0/S_AXI] [get_bd_intf_pins axi_mem_intercon/M05_AXI]
   connect_bd_intf_net -intf_net axi_uart16550_0_UART [get_bd_intf_ports rs232_uart_0] [get_bd_intf_pins axi_uart16550_0/UART]
   connect_bd_intf_net -intf_net default_100mhz_clk_1 [get_bd_intf_ports default_100mhz_clk] [get_bd_intf_pins clk_wiz_0/CLK_IN1_D]
-  connect_bd_intf_net -intf_net jtag_axi_0_M_AXI [get_bd_intf_pins axi_mem_intercon/S00_AXI] [get_bd_intf_pins jtag_axi_0/M_AXI]
-  connect_bd_intf_net -intf_net rocketchip_wrapper_0_M_AXI [get_bd_intf_pins axi_mem_intercon/S01_AXI] [get_bd_intf_pins rocketchip_wrapper_0/M_AXI]
-  connect_bd_intf_net -intf_net rocketchip_wrapper_0_M_AXI_MMIO [get_bd_intf_pins axi_mem_intercon/S02_AXI] [get_bd_intf_pins rocketchip_wrapper_0/M_AXI_MMIO]
+  connect_bd_intf_net -intf_net jtag_axi_0_M_AXI [get_bd_intf_pins axi_interconnect_0/S03_AXI] [get_bd_intf_pins jtag_axi_0/M_AXI]
+  connect_bd_intf_net -intf_net rocketchip_wrapper_0_M_AXI [get_bd_intf_pins axi_mem_intercon/S00_AXI] [get_bd_intf_pins rocketchip_wrapper_0/M_AXI]
+  connect_bd_intf_net -intf_net rocketchip_wrapper_0_M_AXI_MMIO [get_bd_intf_pins axi_mem_intercon/S01_AXI] [get_bd_intf_pins rocketchip_wrapper_0/M_AXI_MMIO]
   connect_bd_intf_net -intf_net sgmii_phyclk_1 [get_bd_intf_ports sgmii_phyclk] [get_bd_intf_pins axi_ethernet_0/lvds_clk]
 
   # Create port connections
-  connect_bd_net -net ARESETN_1 [get_bd_pins axi_mem_intercon/ARESETN] [get_bd_pins rst_clk_wiz_0_100M/interconnect_aresetn]
+  connect_bd_net -net ARESETN_1 [get_bd_pins axi_interconnect_0/ARESETN] [get_bd_pins axi_mem_intercon/ARESETN] [get_bd_pins rst_clk_wiz_0_100M/interconnect_aresetn]
   connect_bd_net -net axi_ethernet_0_dma_mm2s_cntrl_reset_out_n [get_bd_pins axi_ethernet_0/axi_txc_arstn] [get_bd_pins axi_ethernet_0_dma/mm2s_cntrl_reset_out_n]
   connect_bd_net -net axi_ethernet_0_dma_mm2s_introut [get_bd_pins axi_ethernet_0_dma/mm2s_introut] [get_bd_pins xlconcat_0/In4]
   connect_bd_net -net axi_ethernet_0_dma_mm2s_prmry_reset_out_n [get_bd_pins axi_ethernet_0/axi_txd_arstn] [get_bd_pins axi_ethernet_0_dma/mm2s_prmry_reset_out_n]
@@ -449,8 +457,8 @@ proc create_root_design { parentCell } {
   connect_bd_net -net axi_iic_0_iic2intc_irpt [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins xlconcat_0/In5]
   connect_bd_net -net axi_quad_spi_0_ip2intc_irpt [get_bd_pins axi_quad_spi_0/ip2intc_irpt] [get_bd_pins xlconcat_0/In1]
   connect_bd_net -net axi_uart16550_0_ip2intc_irpt [get_bd_pins axi_uart16550_0/ip2intc_irpt] [get_bd_pins xlconcat_0/In0]
-  connect_bd_net -net clk_wiz_0_clk_50M [get_bd_pins axi_mem_intercon/S01_ACLK] [get_bd_pins axi_mem_intercon/S02_ACLK] [get_bd_pins axi_quad_spi_0/ext_spi_clk] [get_bd_pins clk_wiz_0/clk_50M] [get_bd_pins rocketchip_wrapper_0/clk] [get_bd_pins rst_clk_wiz_0_100M/slowest_sync_clk]
-  connect_bd_net -net clk_wiz_0_clk_out1 [get_bd_pins axi_ethernet_0/axis_clk] [get_bd_pins axi_ethernet_0/s_axi_lite_clk] [get_bd_pins axi_ethernet_0_dma/m_axi_mm2s_aclk] [get_bd_pins axi_ethernet_0_dma/m_axi_s2mm_aclk] [get_bd_pins axi_ethernet_0_dma/m_axi_sg_aclk] [get_bd_pins axi_ethernet_0_dma/s_axi_lite_aclk] [get_bd_pins axi_iic_0/s_axi_aclk] [get_bd_pins axi_mem_intercon/ACLK] [get_bd_pins axi_mem_intercon/M00_ACLK] [get_bd_pins axi_mem_intercon/M01_ACLK] [get_bd_pins axi_mem_intercon/M02_ACLK] [get_bd_pins axi_mem_intercon/M03_ACLK] [get_bd_pins axi_mem_intercon/M04_ACLK] [get_bd_pins axi_mem_intercon/M05_ACLK] [get_bd_pins axi_mem_intercon/S00_ACLK] [get_bd_pins axi_mem_intercon/S03_ACLK] [get_bd_pins axi_mem_intercon/S04_ACLK] [get_bd_pins axi_mem_intercon/S05_ACLK] [get_bd_pins axi_quad_spi_0/s_axi4_aclk] [get_bd_pins axi_uart16550_0/s_axi_aclk] [get_bd_pins clk_wiz_0/clk_100M] [get_bd_pins hbm_0/APB_0_PCLK] [get_bd_pins hbm_0/AXI_00_ACLK] [get_bd_pins hbm_0/HBM_REF_CLK_0] [get_bd_pins jtag_axi_0/aclk] [get_bd_pins vio_0/clk]
+  connect_bd_net -net clk_wiz_0_clk_50M [get_bd_pins axi_interconnect_0/M00_ACLK] [get_bd_pins axi_mem_intercon/S00_ACLK] [get_bd_pins axi_mem_intercon/S01_ACLK] [get_bd_pins axi_quad_spi_0/ext_spi_clk] [get_bd_pins clk_wiz_0/clk_50M] [get_bd_pins rocketchip_wrapper_0/clk] [get_bd_pins rst_clk_wiz_0_100M/slowest_sync_clk]
+  connect_bd_net -net clk_wiz_0_clk_out1 [get_bd_pins axi_ethernet_0/axis_clk] [get_bd_pins axi_ethernet_0/s_axi_lite_clk] [get_bd_pins axi_ethernet_0_dma/m_axi_mm2s_aclk] [get_bd_pins axi_ethernet_0_dma/m_axi_s2mm_aclk] [get_bd_pins axi_ethernet_0_dma/m_axi_sg_aclk] [get_bd_pins axi_ethernet_0_dma/s_axi_lite_aclk] [get_bd_pins axi_iic_0/s_axi_aclk] [get_bd_pins axi_interconnect_0/ACLK] [get_bd_pins axi_interconnect_0/S00_ACLK] [get_bd_pins axi_interconnect_0/S01_ACLK] [get_bd_pins axi_interconnect_0/S02_ACLK] [get_bd_pins axi_interconnect_0/S03_ACLK] [get_bd_pins axi_mem_intercon/ACLK] [get_bd_pins axi_mem_intercon/M00_ACLK] [get_bd_pins axi_mem_intercon/M01_ACLK] [get_bd_pins axi_mem_intercon/M02_ACLK] [get_bd_pins axi_mem_intercon/M03_ACLK] [get_bd_pins axi_mem_intercon/M04_ACLK] [get_bd_pins axi_mem_intercon/M05_ACLK] [get_bd_pins axi_quad_spi_0/s_axi4_aclk] [get_bd_pins axi_uart16550_0/s_axi_aclk] [get_bd_pins clk_wiz_0/clk_100M] [get_bd_pins hbm_0/APB_0_PCLK] [get_bd_pins hbm_0/AXI_00_ACLK] [get_bd_pins hbm_0/HBM_REF_CLK_0] [get_bd_pins jtag_axi_0/aclk] [get_bd_pins vio_0/clk]
   connect_bd_net -net clk_wiz_0_locked [get_bd_pins clk_wiz_0/locked] [get_bd_pins rst_clk_wiz_0_100M/dcm_locked]
   connect_bd_net -net dummy_port_in_1 [get_bd_ports dummy_port_in] [get_bd_pins axi_ethernet_0/dummy_port_in]
   connect_bd_net -net jtag_TCK_0_1 [get_bd_ports jtag_TCK] [get_bd_pins rocketchip_wrapper_0/jtag_TCK]
@@ -459,25 +467,16 @@ proc create_root_design { parentCell } {
   connect_bd_net -net reset_1 [get_bd_ports reset] [get_bd_pins rst_clk_wiz_0_100M/ext_reset_in]
   connect_bd_net -net rocketchip_wrapper_0_jtag_TDO [get_bd_ports jtag_TDO] [get_bd_pins rocketchip_wrapper_0/jtag_TDO]
   connect_bd_net -net rst_clk_wiz_0_100M_mb_reset [get_bd_pins rocketchip_wrapper_0/reset] [get_bd_pins rst_clk_wiz_0_100M/mb_reset]
-  connect_bd_net -net rst_clk_wiz_0_100M_peripheral_aresetn [get_bd_pins axi_ethernet_0/s_axi_lite_resetn] [get_bd_pins axi_ethernet_0_dma/axi_resetn] [get_bd_pins axi_iic_0/s_axi_aresetn] [get_bd_pins axi_mem_intercon/M00_ARESETN] [get_bd_pins axi_mem_intercon/M01_ARESETN] [get_bd_pins axi_mem_intercon/M02_ARESETN] [get_bd_pins axi_mem_intercon/M03_ARESETN] [get_bd_pins axi_mem_intercon/M04_ARESETN] [get_bd_pins axi_mem_intercon/M05_ARESETN] [get_bd_pins axi_mem_intercon/S00_ARESETN] [get_bd_pins axi_mem_intercon/S01_ARESETN] [get_bd_pins axi_mem_intercon/S02_ARESETN] [get_bd_pins axi_mem_intercon/S03_ARESETN] [get_bd_pins axi_mem_intercon/S04_ARESETN] [get_bd_pins axi_mem_intercon/S05_ARESETN] [get_bd_pins axi_quad_spi_0/s_axi4_aresetn] [get_bd_pins axi_uart16550_0/s_axi_aresetn] [get_bd_pins hbm_0/APB_0_PRESET_N] [get_bd_pins hbm_0/AXI_00_ARESET_N] [get_bd_pins jtag_axi_0/aresetn] [get_bd_pins rst_clk_wiz_0_100M/peripheral_aresetn]
+  connect_bd_net -net rst_clk_wiz_0_100M_peripheral_aresetn [get_bd_pins axi_ethernet_0/s_axi_lite_resetn] [get_bd_pins axi_ethernet_0_dma/axi_resetn] [get_bd_pins axi_iic_0/s_axi_aresetn] [get_bd_pins axi_interconnect_0/M00_ARESETN] [get_bd_pins axi_interconnect_0/S00_ARESETN] [get_bd_pins axi_interconnect_0/S01_ARESETN] [get_bd_pins axi_interconnect_0/S02_ARESETN] [get_bd_pins axi_interconnect_0/S03_ARESETN] [get_bd_pins axi_mem_intercon/M00_ARESETN] [get_bd_pins axi_mem_intercon/M01_ARESETN] [get_bd_pins axi_mem_intercon/M02_ARESETN] [get_bd_pins axi_mem_intercon/M03_ARESETN] [get_bd_pins axi_mem_intercon/M04_ARESETN] [get_bd_pins axi_mem_intercon/M05_ARESETN] [get_bd_pins axi_mem_intercon/S00_ARESETN] [get_bd_pins axi_mem_intercon/S01_ARESETN] [get_bd_pins axi_quad_spi_0/s_axi4_aresetn] [get_bd_pins axi_uart16550_0/s_axi_aresetn] [get_bd_pins hbm_0/APB_0_PRESET_N] [get_bd_pins hbm_0/AXI_00_ARESET_N] [get_bd_pins jtag_axi_0/aresetn] [get_bd_pins rst_clk_wiz_0_100M/peripheral_aresetn]
   connect_bd_net -net vio_0_probe_out0 [get_bd_pins rst_clk_wiz_0_100M/aux_reset_in] [get_bd_pins vio_0/probe_out0]
   connect_bd_net -net xlconcat_0_dout [get_bd_pins rocketchip_wrapper_0/interrupts] [get_bd_pins xlconcat_0/dout]
   connect_bd_net -net xlconstant_0_dout [get_bd_pins clk_wiz_0/reset] [get_bd_pins xlconstant_0/dout]
 
   # Create address segments
-  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM08] -force
-  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM08] -force
-  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM08] -force
-  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM09] -force
-  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM09] -force
-  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM09] -force
-  assign_bd_address -offset 0x60400000 -range 0x00040000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_ethernet_0/s_axi/Reg0] -force
-  assign_bd_address -offset 0x60300000 -range 0x00010000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_ethernet_0_dma/S_AXI_LITE/Reg] -force
-  assign_bd_address -offset 0x60500000 -range 0x00010000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_iic_0/S_AXI/Reg] -force
-  assign_bd_address -offset 0x60100000 -range 0x00010000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_quad_spi_0/aximm/MEM0] -force
-  assign_bd_address -offset 0x60200000 -range 0x00010000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs axi_uart16550_0/S_AXI/Reg] -force
-  assign_bd_address -offset 0x80000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM08] -force
-  assign_bd_address -offset 0x90000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM09] -force
+  assign_bd_address -offset 0x00000000 -range 0x00010000000000000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs rocketchip_wrapper_0/S_AXI/reg0] -force
+  assign_bd_address -offset 0x00000000 -range 0x00010000000000000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs rocketchip_wrapper_0/S_AXI/reg0] -force
+  assign_bd_address -offset 0x00000000 -range 0x00010000000000000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs rocketchip_wrapper_0/S_AXI/reg0] -force
+  assign_bd_address -offset 0x00000000 -range 0x00010000000000000000 -target_address_space [get_bd_addr_spaces jtag_axi_0/Data] [get_bd_addr_segs rocketchip_wrapper_0/S_AXI/reg0] -force
   assign_bd_address -offset 0x60400000 -range 0x00040000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs axi_ethernet_0/s_axi/Reg0] -force
   assign_bd_address -offset 0x60400000 -range 0x00040000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI_MMIO] [get_bd_addr_segs axi_ethernet_0/s_axi/Reg0] -force
   assign_bd_address -offset 0x60300000 -range 0x00010000 -target_address_space [get_bd_addr_spaces rocketchip_wrapper_0/M_AXI] [get_bd_addr_segs axi_ethernet_0_dma/S_AXI_LITE/Reg] -force
@@ -495,7 +494,6 @@ proc create_root_design { parentCell } {
 
   # Exclude Address Segments
   exclude_bd_addr_seg -offset 0x60400000 -range 0x00040000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs axi_ethernet_0/s_axi/Reg0]
-  exclude_bd_addr_seg -offset 0x60300000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs axi_ethernet_0_dma/S_AXI_LITE/Reg]
   exclude_bd_addr_seg -offset 0x60500000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs axi_iic_0/S_AXI/Reg]
   exclude_bd_addr_seg -offset 0x60100000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs axi_quad_spi_0/aximm/MEM0]
   exclude_bd_addr_seg -offset 0x60200000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs axi_uart16550_0/S_AXI/Reg]
@@ -514,7 +512,6 @@ proc create_root_design { parentCell } {
   exclude_bd_addr_seg -offset 0xE0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM14]
   exclude_bd_addr_seg -offset 0xF0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_MM2S] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM15]
   exclude_bd_addr_seg -offset 0x60400000 -range 0x00040000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs axi_ethernet_0/s_axi/Reg0]
-  exclude_bd_addr_seg -offset 0x60300000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs axi_ethernet_0_dma/S_AXI_LITE/Reg]
   exclude_bd_addr_seg -offset 0x60500000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs axi_iic_0/S_AXI/Reg]
   exclude_bd_addr_seg -offset 0x60100000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs axi_quad_spi_0/aximm/MEM0]
   exclude_bd_addr_seg -offset 0x60200000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs axi_uart16550_0/S_AXI/Reg]
@@ -533,7 +530,6 @@ proc create_root_design { parentCell } {
   exclude_bd_addr_seg -offset 0xE0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM14]
   exclude_bd_addr_seg -offset 0xF0000000 -range 0x10000000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_S2MM] [get_bd_addr_segs hbm_0/SAXI_00/HBM_MEM15]
   exclude_bd_addr_seg -offset 0x60400000 -range 0x00040000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs axi_ethernet_0/s_axi/Reg0]
-  exclude_bd_addr_seg -offset 0x60300000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs axi_ethernet_0_dma/S_AXI_LITE/Reg]
   exclude_bd_addr_seg -offset 0x60500000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs axi_iic_0/S_AXI/Reg]
   exclude_bd_addr_seg -offset 0x60100000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs axi_quad_spi_0/aximm/MEM0]
   exclude_bd_addr_seg -offset 0x60200000 -range 0x00010000 -target_address_space [get_bd_addr_spaces axi_ethernet_0_dma/Data_SG] [get_bd_addr_segs axi_uart16550_0/S_AXI/Reg]
@@ -570,6 +566,7 @@ proc create_root_design { parentCell } {
   # Restore current instance
   current_bd_instance $oldCurInst
 
+  validate_bd_design
   save_bd_design
 }
 # End of create_root_design()
@@ -581,6 +578,4 @@ proc create_root_design { parentCell } {
 
 create_root_design ""
 
-
-common::send_gid_msg -ssname BD::TCL -id 2053 -severity "WARNING" "This Tcl script was generated from a block design that has not been validated. It is possible that design <$design_name> may result in errors during validation."
 

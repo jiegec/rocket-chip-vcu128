@@ -110,6 +110,49 @@ module rocketchip_wrapper(
     M_AXI_MMIO_rresp,
     M_AXI_MMIO_rlast,
 
+    // slave port for dma
+    S_AXI_awready,
+    S_AXI_awvalid,
+    S_AXI_awid,
+    S_AXI_awaddr,
+    S_AXI_awlen,
+    S_AXI_awsize,
+    S_AXI_awburst,
+    S_AXI_awlock,
+    S_AXI_awcache,
+    S_AXI_awprot,
+    S_AXI_awqos,
+
+    S_AXI_wready,
+    S_AXI_wvalid,
+    S_AXI_wdata,
+    S_AXI_wstrb,
+    S_AXI_wlast,
+
+    S_AXI_bready,
+    S_AXI_bvalid,
+    S_AXI_bid,
+    S_AXI_bresp,
+
+    S_AXI_arready,
+    S_AXI_arvalid,
+    S_AXI_arid,
+    S_AXI_araddr,
+    S_AXI_arlen,
+    S_AXI_arsize,
+    S_AXI_arburst,
+    S_AXI_arlock,
+    S_AXI_arcache,
+    S_AXI_arprot,
+    S_AXI_arqos,
+
+    S_AXI_rready,
+    S_AXI_rvalid,
+    S_AXI_rid,
+    S_AXI_rdata,
+    S_AXI_rresp,
+    S_AXI_rlast,
+
     // JTAG
     jtag_TCK,
     jtag_TMS,
@@ -207,6 +250,49 @@ module rocketchip_wrapper(
     input [1:0] M_AXI_MMIO_rresp;
     input M_AXI_MMIO_rlast;
 
+    // MMIO
+    output S_AXI_awready;
+    input S_AXI_awvalid;
+    input [7:0] S_AXI_awid;
+    input [63:0] S_AXI_awaddr;
+    input [7:0] S_AXI_awlen;
+    input [2:0] S_AXI_awsize;
+    input [1:0] S_AXI_awburst;
+    input S_AXI_awlock;
+    input [3:0] S_AXI_awcache;
+    input [2:0] S_AXI_awprot;
+    input [3:0] S_AXI_awqos;
+
+    output S_AXI_wready;
+    input S_AXI_wvalid;
+    input [63:0] S_AXI_wdata;
+    input [7:0] S_AXI_wstrb;
+    input S_AXI_wlast;
+
+    input S_AXI_bready;
+    output S_AXI_bvalid;
+    output [7:0] S_AXI_bid;
+    output [1:0] S_AXI_bresp;
+
+    output S_AXI_arready;
+    input S_AXI_arvalid;
+    input [7:0] S_AXI_arid;
+    input [63:0] S_AXI_araddr;
+    input [7:0] S_AXI_arlen;
+    input [2:0] S_AXI_arsize;
+    input [1:0] S_AXI_arburst;
+    input S_AXI_arlock;
+    input [3:0] S_AXI_arcache;
+    input [2:0] S_AXI_arprot;
+    input [3:0] S_AXI_arqos;
+
+    input S_AXI_rready;
+    output S_AXI_rvalid;
+    output [7:0] S_AXI_rid;
+    output [63:0] S_AXI_rdata;
+    output [1:0] S_AXI_rresp;
+    output S_AXI_rlast;
+
     assign M_AXI_araddr[63:32] = 0;
     assign M_AXI_awaddr[63:32] = 0;
     assign M_AXI_MMIO_araddr[63:31] = 0;
@@ -297,6 +383,44 @@ module rocketchip_wrapper(
         .io_mmio_axi4_r_bits_id (M_AXI_MMIO_rid),
         .io_mmio_axi4_r_bits_data (M_AXI_MMIO_rdata),
         .io_mmio_axi4_r_bits_last (M_AXI_MMIO_rlast),
+
+        .io_slave_axi4_ar_valid (S_AXI_arvalid),
+        .io_slave_axi4_ar_ready (S_AXI_arready),
+        .io_slave_axi4_ar_bits_addr (S_AXI_araddr[30:0]),
+        .io_slave_axi4_ar_bits_id (S_AXI_arid),
+        .io_slave_axi4_ar_bits_size (S_AXI_arsize),
+        .io_slave_axi4_ar_bits_len (S_AXI_arlen),
+        .io_slave_axi4_ar_bits_burst (S_AXI_arburst),
+        .io_slave_axi4_ar_bits_cache (S_AXI_arcache),
+        .io_slave_axi4_ar_bits_lock (S_AXI_arlock),
+        .io_slave_axi4_ar_bits_prot (S_AXI_arprot),
+        .io_slave_axi4_ar_bits_qos (S_AXI_arqos),
+        .io_slave_axi4_aw_valid (S_AXI_awvalid),
+        .io_slave_axi4_aw_ready (S_AXI_awready),
+        .io_slave_axi4_aw_bits_addr (S_AXI_awaddr[30:0]),
+        .io_slave_axi4_aw_bits_id (S_AXI_awid),
+        .io_slave_axi4_aw_bits_size (S_AXI_awsize),
+        .io_slave_axi4_aw_bits_len (S_AXI_awlen),
+        .io_slave_axi4_aw_bits_burst (S_AXI_awburst),
+        .io_slave_axi4_aw_bits_cache (S_AXI_awcache),
+        .io_slave_axi4_aw_bits_lock (S_AXI_awlock),
+        .io_slave_axi4_aw_bits_prot (S_AXI_awprot),
+        .io_slave_axi4_aw_bits_qos (S_AXI_awqos),
+        .io_slave_axi4_w_valid (S_AXI_wvalid),
+        .io_slave_axi4_w_ready (S_AXI_wready),
+        .io_slave_axi4_w_bits_strb (S_AXI_wstrb),
+        .io_slave_axi4_w_bits_data (S_AXI_wdata),
+        .io_slave_axi4_w_bits_last (S_AXI_wlast),
+        .io_slave_axi4_b_valid (S_AXI_bvalid),
+        .io_slave_axi4_b_ready (S_AXI_bready),
+        .io_slave_axi4_b_bits_resp (S_AXI_bresp),
+        .io_slave_axi4_b_bits_id (S_AXI_bid),
+        .io_slave_axi4_r_valid (S_AXI_rvalid),
+        .io_slave_axi4_r_ready (S_AXI_rready),
+        .io_slave_axi4_r_bits_resp (S_AXI_rresp),
+        .io_slave_axi4_r_bits_id (S_AXI_rid),
+        .io_slave_axi4_r_bits_data (S_AXI_rdata),
+        .io_slave_axi4_r_bits_last (S_AXI_rlast),
 
         .io_interrupts(interrupts),
 

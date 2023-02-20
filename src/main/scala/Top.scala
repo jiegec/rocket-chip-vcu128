@@ -23,11 +23,13 @@ class RocketChip(implicit val p: Parameters) extends Module {
 
   require(target.mem_axi4.size == 1)
   require(target.mmio_axi4.size == 1)
+  require(target.slave_axi4.size == 1)
 
   val io = IO(new Bundle {
     val interrupts = Input(UInt(p(NExtTopInterrupts).W))
     val mem_axi4 = target.mem_axi4.head.cloneType
     val mmio_axi4 = target.mmio_axi4.head.cloneType
+    val slave_axi4 = Flipped(target.slave_axi4.head.cloneType)
     val jtag = Flipped(new JTAGIO())
   })
 
@@ -51,6 +53,7 @@ class RocketChip(implicit val p: Parameters) extends Module {
 
   io.mem_axi4 <> target.mem_axi4.head
   io.mmio_axi4 <> target.mmio_axi4.head
+  io.slave_axi4 <> target.slave_axi4.head
 
   target.interrupts := io.interrupts
 
@@ -62,7 +65,8 @@ class RocketTop(implicit p: Parameters)
     with HasAsyncExtInterrupts
     with HasPeripheryDebug
     with CanHaveMasterAXI4MemPort
-    with CanHaveMasterAXI4MMIOPort {
+    with CanHaveMasterAXI4MMIOPort
+    with CanHaveSlaveAXI4Port {
   override lazy val module = new RocketTopModule(this)
 
   // from freechips.rocketchip.system.ExampleRocketSystem
@@ -79,4 +83,5 @@ class RocketTopModule(outer: RocketTop)
     with DontTouch {
   lazy val mem_axi4 = outer.mem_axi4
   lazy val mmio_axi4 = outer.mmio_axi4
+  lazy val slave_axi4 = outer.l2_frontend_bus_axi4
 }

@@ -85,5 +85,6 @@ class RocketConfig
         new WithNExtTopInterrupts(6) ++ // UART(1) + ETH(1+2) + I2C(1) + SPI(1)
         new WithCustomMemPort ++
         new WithCustomMMIOPort ++
+        new WithDefaultSlavePort ++
         new freechips.rocketchip.system.BaseConfig
     )
