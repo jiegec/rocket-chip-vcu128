@@ -13,3 +13,6 @@
 [submodule "submodules/verilog-axi"]
 	path = submodules/verilog-axi
 	url = git@github.com:alexforencich/verilog-axi.git
+[submodule "submodules/riscv-boom"]
+	path = submodules/riscv-boom
+	url = git@github.com:riscv-boom/riscv-boom.git

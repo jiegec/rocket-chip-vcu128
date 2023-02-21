@@ -56,10 +56,18 @@ class WithCustomMemPort
     })
 
 class WithCFlush
-    extends Config((site, here, up) => { case RocketTilesKey =>
-      up(RocketTilesKey, site).map(x =>
-        x.copy(core = x.core.copy(haveCFlush = true))
-      )
+    extends Config((site, here, up) => { case TilesLocated(InSubsystem) =>
+      up(TilesLocated(InSubsystem), site) map {
+        case tp: RocketTileAttachParams =>
+          tp.copy(tileParams =
+            tp.tileParams.copy(
+              core = tp.tileParams.core.copy(
+                haveCFlush = true
+              )
+            )
+          )
+        case t => t
+      }
     })
 
 class WithCustomJtag
@@ -78,6 +86,10 @@ class RocketConfig
         new WithoutTLMonitors ++
         new WithIDBits(5) ++
         new WithCFlush ++
+        new WithBitManip ++
+        new WithBitManipCrypto ++
+        new WithCryptoNIST ++
+        new WithCryptoSM ++
         new WithCustomJtag ++
         new WithJtagDTM ++
         new WithNBigCores(2) ++
