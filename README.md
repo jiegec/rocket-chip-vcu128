@@ -2,6 +2,8 @@
 
 Port Rocket Chip to VCU128 platform. Based on [rocket2thinpad](https://github.com/jiegec/rocket2thinpad). Tested with Vivado 2020.2.
 
+CAVEAT: You can use either BOOM Core or Rocket Core. Change configuration at `src/main/scala/Configs.scala` before building.
+
 AXI Interconnect memory mapping:
 
 1. AXI Quad SPI: 0x6010_0000
