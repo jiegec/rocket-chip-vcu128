@@ -234,3 +234,9 @@ Boot process:
 2. Run OpenSBI @ 0x80000000, jump to U-Boot at 0x80020000
 3. U-Boot relocates to high address, load Linux kernel + dts from network at 0x80100000
 4. Copy Linux kernel to 0x82000000 and jump to Linux kernel
+
+Performance of one big Rocket Chip running Linux @ 50MHz:
+
+- Dhrystone: 57537.4 per second, `57537.4 / 1757 / 50 = 0.65 DMIPS/MHz`
+- Coremark: 98.3 per second, `98.3 / 50 = 1.97 Coremark/MHz`
+- Whetstone: 20 MIPS
