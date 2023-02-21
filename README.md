@@ -237,6 +237,12 @@ Boot process:
 
 Performance of one big Rocket Chip running Linux @ 50MHz:
 
-- Dhrystone: 57537.4 per second, `57537.4 / 1757 / 50 = 0.65 DMIPS/MHz`
-- Coremark: 104.2 per second, `104.2 / 50 = 2.08 Coremark/MHz`
+- Dhrystone(-Os): 57537.4 per second, `57537.4 / 1757 / 50 = 0.65 DMIPS/MHz`
+- Coremark(-O2): 104.2 per second, `104.2 / 50 = 2.08 Coremark/MHz`
 - Whetstone: 33.3 MIPS
+
+Performance of one medium BOOM core running Linux @ 50MHz:
+
+- Dhrystone(-O2): 197238.7 per second, `197238.7 / 1757 / 50 = 2.25 DMIPS/MHz`
+- Coremark(-O2): 171.0 per second, `171.0 / 50 = 3.42 Coremark/MHz`
+- Whetstone: 50.0/100.0 MIPS
