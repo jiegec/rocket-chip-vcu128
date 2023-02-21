@@ -9,4 +9,4 @@ all: $(bootrom_img)
 	$(OBJCOPY) -O binary $< $@
 
 %.elf: %.S bootloader.c linker.ld
-	$(GCC) -Tlinker.ld $< bootloader.c -nostdlib -static -Wl,--no-gc-sections -o $@
+	$(GCC) -Tlinker.ld $< bootloader.c -ffreestanding -nostdlib -static -Wl,--no-gc-sections -o $@

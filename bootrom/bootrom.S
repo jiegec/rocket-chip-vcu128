@@ -8,6 +8,8 @@ _start:
   li sp, DRAM_TOP
   la s0, bootloader
   csrr a0, mhartid
+  bnez a0, boot_other_hart
+
   la a1, _dtb
   jr s0
 
@@ -21,6 +23,22 @@ _hang:
 1:
   wfi
   j 1b
+
+boot_other_hart:
+  la s0, trap
+  csrw mtvec, s0
+  // enable m-mode software interrupt
+  csrsi mie, 0x8
+  // enable m-mode interrupt
+  csrsi mstatus, 0x8
+  j 1b
+
+  .p2align 2
+trap:
+  csrr a0, mhartid
+  li s0, DRAM_BASE
+  jr s0
+
 
 .section .rodata.dtb, "a", @progbits
 .globl _dtb

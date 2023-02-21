@@ -80,7 +80,7 @@ class RocketConfig
         new WithCFlush ++
         new WithCustomJtag ++
         new WithJtagDTM ++
-        new WithNBigCores(1) ++
+        new WithNBigCores(2) ++
         new WithBootROMResetAddress(0x10000) ++
         new WithNExtTopInterrupts(6) ++ // UART(1) + ETH(1+2) + I2C(1) + SPI(1)
         new WithCustomMemPort ++

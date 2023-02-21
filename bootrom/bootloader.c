@@ -10,8 +10,9 @@ volatile uint8_t *UART_FCR = (uint8_t *)(UART_BASE + 0x1008);
 volatile uint8_t *UART_LCR = (uint8_t *)(UART_BASE + 0x100C);
 volatile uint8_t *UART_MCR = (uint8_t *)(UART_BASE + 0x1010);
 volatile uint8_t *UART_LSR = (uint8_t *)(UART_BASE + 0x1014);
+volatile int *CLINT = (int *)0x2000000;
 
-void init_serial() { 
+void init_serial() {
   // Enable 8 bytes FIFO
   *UART_FCR = 0x81;
   // LCR(7) = 1
@@ -69,7 +70,9 @@ void puthex(uint32_t num) {
   }
 }
 
-void bootloader() {
+void bootloader(int mhartid) {
+  void (*boot)() = (void (*)())0x80000000;
+  // Boot Hart
   init_serial();
   puts("NO BOOT FAIL\r\n");
   uint32_t len = getlen();
@@ -82,7 +85,8 @@ void bootloader() {
     MEM++;
   }
   puts("BOOT\r\n");
-  void (*boot)() = (void(*)())0x80000000;
+  // ask hart 1 to jump
+  CLINT[1] = 1;
   boot();
 }
 
