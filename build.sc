@@ -91,6 +91,9 @@ object rocketChip extends CommonModule with SbtModule {
 object boom extends CommonModule with SbtModule {
   override def millSourcePath = os.pwd / "submodules" / "riscv-boom"
   override def moduleDeps = super.moduleDeps ++ Seq(rocketChip)
+  override def scalacPluginIvyDeps = super.scalacPluginIvyDeps() ++ Agg(
+    getVersion("chisel3-plugin")
+  )
 }
 
 object vcu128 extends CommonModule with ScalafmtModule {

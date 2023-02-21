@@ -15,6 +15,9 @@ import freechips.rocketchip.rocket.{
 }
 import freechips.rocketchip.tile.{RocketTileParams, XLen}
 import freechips.rocketchip.util._
+import boom.common.WithNLargeBooms
+import boom.common.WithNMediumBooms
+import boom.common.BoomTileAttachParams
 
 class WithBootROMResetAddress(resetAddress: BigInt)
     extends Config((_, _, up) => { case BootROMLocated(x) =>
@@ -66,6 +69,14 @@ class WithCFlush
               )
             )
           )
+        case tp: BoomTileAttachParams =>
+          tp.copy(tileParams =
+            tp.tileParams.copy(
+              core = tp.tileParams.core.copy(
+                haveCFlush = true
+              )
+            )
+          )
         case t => t
       }
     })
@@ -92,7 +103,10 @@ class RocketConfig
         new WithCryptoSM ++
         new WithCustomJtag ++
         new WithJtagDTM ++
-        new WithNBigCores(2) ++
+        // Rocket Core
+        // new WithNBigCores(2) ++
+        // BOOM Core
+        new WithNMediumBooms(2) ++
         new WithBootROMResetAddress(0x10000) ++
         new WithNExtTopInterrupts(6) ++ // UART(1) + ETH(1+2) + I2C(1) + SPI(1)
         new WithCustomMemPort ++
