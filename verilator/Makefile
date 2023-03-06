@@ -1,6 +1,6 @@
-CFLAGS ?= --std=c++14
+CFLAGS ?= --std=c++14 -O3
 VERILATOR ?= verilator
-VERILATOR_FLAGS ?= -Wall -Wno-fatal -trace -CFLAGS $(CFLAGS) --timescale-override 1ns/1ns
+VERILATOR_FLAGS ?= -threads -O3 -Wall -Wno-fatal -trace -CFLAGS $(CFLAGS) --timescale-override 1ns/1ns
 
 all: Vtestbench_rocketchip
 

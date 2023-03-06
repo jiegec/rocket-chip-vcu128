@@ -27,8 +27,8 @@ class WithBootROMResetAddress(resetAddress: BigInt)
 class WithIDBits(n: Int)
     extends Config((site, here, up) => {
       case ExtMem =>
-        up(ExtMem, site).map(x => x.copy(master = x.master.copy(idBits = n)))
-      case ExtBus => up(ExtBus, site).map(x => x.copy(idBits = n))
+        up(ExtMem).map(x => x.copy(master = x.master.copy(idBits = n)))
+      case ExtBus => up(ExtBus).map(x => x.copy(idBits = n))
     })
 
 class WithCustomMMIOPort
@@ -60,7 +60,7 @@ class WithCustomMemPort
 
 class WithCFlush
     extends Config((site, here, up) => { case TilesLocated(InSubsystem) =>
-      up(TilesLocated(InSubsystem), site) map {
+      up(TilesLocated(InSubsystem)) map {
         case tp: RocketTileAttachParams =>
           tp.copy(tileParams =
             tp.tileParams.copy(
@@ -104,9 +104,9 @@ class RocketConfig
         new WithCustomJtag ++
         new WithJtagDTM ++
         // Rocket Core
-        // new WithNBigCores(2) ++
+        new WithNBigCores(2) ++
         // BOOM Core
-        new WithNMediumBooms(2) ++
+        // new WithNMediumBooms(2) ++
         new WithBootROMResetAddress(0x10000) ++
         new WithNExtTopInterrupts(6) ++ // UART(1) + ETH(1+2) + I2C(1) + SPI(1)
         new WithCustomMemPort ++
