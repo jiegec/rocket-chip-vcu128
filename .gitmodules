@@ -16,3 +16,6 @@
 [submodule "submodules/riscv-boom"]
 	path = submodules/riscv-boom
 	url = git@github.com:riscv-boom/riscv-boom.git
+[submodule "submodules/rocket-chip-inclusive-cache"]
+	path = submodules/rocket-chip-inclusive-cache
+	url = git@github.com:chipsalliance/rocket-chip-inclusive-cache.git

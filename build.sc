@@ -96,6 +96,14 @@ object boom extends CommonModule with SbtModule {
   )
 }
 
+object inclusiveCache extends CommonModule with ScalaModule {
+  override def millSourcePath = os.pwd / "submodules" / "rocket-chip-inclusive-cache" / "design" / "craft" / "inclusivecache"
+  override def moduleDeps = super.moduleDeps ++ Seq(rocketChip)
+  override def scalacPluginIvyDeps = super.scalacPluginIvyDeps() ++ Agg(
+    getVersion("chisel3-plugin")
+  )
+}
+
 object vcu128 extends CommonModule with ScalafmtModule {
   override def millSourcePath = os.pwd
 
@@ -109,7 +117,7 @@ object vcu128 extends CommonModule with ScalafmtModule {
   )
 
   override def moduleDeps =
-    super.moduleDeps ++ Seq(apiConfigChipsalliance, rocketChip, boom)
+    super.moduleDeps ++ Seq(apiConfigChipsalliance, rocketChip, boom, inclusiveCache)
 
   object test extends Tests with TestModule.ScalaTest {
     override def ivyDeps = super.ivyDeps() ++ Agg(

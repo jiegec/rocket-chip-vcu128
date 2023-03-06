@@ -7,6 +7,7 @@ import freechips.rocketchip.devices.tilelink.BootROMParams
 import freechips.rocketchip.devices.tilelink.BootROMLocated
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.subsystem.MemoryPortParams
+import freechips.rocketchip.subsystem.WithInclusiveCache
 import freechips.rocketchip.rocket.{
   RocketCoreParams,
   MulDivParams,
@@ -107,6 +108,7 @@ class RocketConfig
         new WithNBigCores(2) ++
         // BOOM Core
         // new WithNMediumBooms(2) ++
+        new WithInclusiveCache ++
         new WithBootROMResetAddress(0x10000) ++
         new WithNExtTopInterrupts(6) ++ // UART(1) + ETH(1+2) + I2C(1) + SPI(1)
         new WithCustomMemPort ++
