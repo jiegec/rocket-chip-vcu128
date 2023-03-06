@@ -8,8 +8,8 @@ import com.goyeau.mill.scalafix.ScalafixModule
 
 // learned from https://github.com/OpenXiangShan/fudian/blob/main/build.sc
 val defaultVersions = Map(
-  "chisel3" -> ("edu.berkeley.cs", "3.5.5", false),
-  "chisel3-plugin" -> ("edu.berkeley.cs", "3.5.5", true),
+  "chisel3" -> ("edu.berkeley.cs", "3.5.6", false),
+  "chisel3-plugin" -> ("edu.berkeley.cs", "3.5.6", true),
   "paradise" -> ("org.scalamacros", "2.1.1", true),
   "json4s-jackson" -> ("org.json4s", "3.6.6", false),
   "chiseltest" -> ("edu.berkeley.cs", "0.5.0", false),
