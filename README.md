@@ -41,9 +41,9 @@ Boot [Custom OpenSBI](https://github.com/jiegec/opensbi/tree/rocket-chip-vcu128)
 
 ```shell
 # in opensbi
-$ make CROSS_COMPILE=riscv64-linux-gnu- -j4 PLATFORM=rocket-chip-vcu128
+$ make CROSS_COMPILE=riscv64-linux-gnu- -j4 PLATFORM=rocket-chip-vcu128-dual-core
 # in this repo
-$ python3 bootrom/boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_jump.bin /dev/ttyUSB2
+$ python3 bootrom/boot.py ~/opensbi/build/platform/rocket-chip-vcu128-dual-core/firmware/fw_jump.bin /dev/ttyUSB2
 Firmware Base             : 0x80000000
 Firmware Size             : 68 KB
 Runtime SBI Version       : 0.2
@@ -83,7 +83,7 @@ Boot custom OpenSBI in M-mode with U-Boot in S-mode:
 $ make rocket-chip-vcu128-smode_defconfig
 $ make CROSS_COMPILE=riscv64-linux-gnu- -j4
 # in opensbi
-$ make CROSS_COMPILE=riscv64-linux-gnu- -j4 PLATFORM=rocket-chip-vcu128 FW_PAYLOAD_PATH=$HOME/u-boot/u-boot.bin all
+$ make CROSS_COMPILE=riscv64-linux-gnu- -j4 PLATFORM=rocket-chip-vcu128-dual-core FW_PAYLOAD_PATH=$HOME/u-boot/u-boot-nodtb.bin
 # in this repo
 $ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB2
 # same as above
@@ -125,9 +125,9 @@ $ sudo python3 -m py3tftp -p 69
 # build opensbi with u-boot.bin payload
 $ ./build_smode.sh
 # in this repo
-$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB2
+$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128-dual-core/firmware/fw_payload.bin /dev/ttyUSB2
 # in U-Boot shell
-=> tftpboot 0x82000000 10.0.0.1:image.itb
+=> run boot_dual
 Using eth0@60400000 device
 TFTP from server 10.0.0.1; our IP address is 10.0.0.2
 Filename 'image.itb'.
