@@ -8,10 +8,10 @@ import com.goyeau.mill.scalafix.ScalafixModule
 
 // learned from https://github.com/OpenXiangShan/fudian/blob/main/build.sc
 val defaultVersions = Map(
-  "chisel3" -> ("edu.berkeley.cs", "3.5.6", false),
-  "chisel3-plugin" -> ("edu.berkeley.cs", "3.5.6", true),
+  "chisel3" -> ("edu.berkeley.cs", "3.6.0-RC2", false),
+  "chisel3-plugin" -> ("edu.berkeley.cs", "3.6.0-RC2", true),
   "paradise" -> ("org.scalamacros", "2.1.1", true),
-  "json4s-jackson" -> ("org.json4s", "3.6.6", false),
+  "json4s-jackson" -> ("org.json4s", "4.0.6", false),
   "chiseltest" -> ("edu.berkeley.cs", "0.5.0", false),
   "scalatest" -> ("org.scalatest", "3.2.10", false)
 )
@@ -88,6 +88,7 @@ object rocketChip extends CommonModule with SbtModule {
     Seq("-deprecation", "-unchecked")
 }
 
+/*
 object boom extends CommonModule with SbtModule {
   override def millSourcePath = os.pwd / "submodules" / "riscv-boom"
   override def moduleDeps = super.moduleDeps ++ Seq(rocketChip)
@@ -95,6 +96,7 @@ object boom extends CommonModule with SbtModule {
     getVersion("chisel3-plugin")
   )
 }
+*/
 
 object inclusiveCache extends CommonModule with ScalaModule {
   override def millSourcePath = os.pwd / "submodules" / "rocket-chip-inclusive-cache" / "design" / "craft" / "inclusivecache"
@@ -117,7 +119,8 @@ object vcu128 extends CommonModule with ScalafmtModule {
   )
 
   override def moduleDeps =
-    super.moduleDeps ++ Seq(apiConfigChipsalliance, rocketChip, boom, inclusiveCache)
+    // super.moduleDeps ++ Seq(apiConfigChipsalliance, rocketChip, boom, inclusiveCache)
+     super.moduleDeps ++ Seq(apiConfigChipsalliance, rocketChip, inclusiveCache)
 
   object test extends Tests with TestModule.ScalaTest {
     override def ivyDeps = super.ivyDeps() ++ Agg(

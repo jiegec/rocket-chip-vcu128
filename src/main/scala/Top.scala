@@ -1,24 +1,24 @@
 package vcu128
 
 import chisel3._
-import freechips.rocketchip.config.{Parameters, Field}
 import freechips.rocketchip.devices.tilelink._
 import freechips.rocketchip.diplomacy.{LazyModule, LazyModuleImp}
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.util._
 import freechips.rocketchip.tile._
-import freechips.rocketchip.devices.debug.HasPeripheryDebugModuleImp
 import freechips.rocketchip.devices.debug.HasPeripheryDebug
 import freechips.rocketchip.jtag.JTAGIO
 import freechips.rocketchip.devices.debug.Debug
 import freechips.rocketchip.devices.debug.JtagDTMKey
+import org.chipsalliance.cde.config.Parameters
 
 class RocketChip(implicit val p: Parameters) extends Module {
   val config = p(ExtIn)
-  val target = Module(LazyModule(new RocketTop).module)
+  val top = LazyModule(new RocketTop)
+  val target = Module(top.module)
 
   // ndreset can reset all harts
-  val childReset = reset.asBool | target.debug.map(_.ndreset).getOrElse(false.B)
+  val childReset = reset.asBool | top.debug.map(_.ndreset).getOrElse(false.B)
   target.reset := childReset
 
   require(target.mem_axi4.size == 1)
@@ -33,7 +33,7 @@ class RocketChip(implicit val p: Parameters) extends Module {
     val jtag = Flipped(new JTAGIO())
   })
 
-  val systemJtag = target.debug.get.systemjtag.get
+  val systemJtag = top.debug.get.systemjtag.get
   systemJtag.jtag.TCK := io.jtag.TCK
   systemJtag.jtag.TMS := io.jtag.TMS
   systemJtag.jtag.TDI := io.jtag.TDI
@@ -45,11 +45,11 @@ class RocketChip(implicit val p: Parameters) extends Module {
   // otherwise the internal logic(e.g. TLXbar) might not function
   // if reset deasserted before TCK rises
   systemJtag.reset := reset.asAsyncReset
-  target.resetctrl.foreach { rc =>
+  top.resetctrl.foreach { rc =>
     rc.hartIsInReset.foreach { _ := childReset }
   }
 
-  Debug.connectDebugClockAndReset(target.debug, clock)
+  Debug.connectDebugClockAndReset(top.debug, clock)
 
   io.mem_axi4 <> target.mem_axi4.head
   io.mmio_axi4 <> target.mmio_axi4.head
@@ -79,7 +79,6 @@ class RocketTopModule(outer: RocketTop)
     extends RocketSubsystemModuleImp(outer)
     with HasRTCModuleImp
     with HasExtInterruptsModuleImp
-    with HasPeripheryDebugModuleImp
     with DontTouch {
   lazy val mem_axi4 = outer.mem_axi4
   lazy val mmio_axi4 = outer.mmio_axi4

@@ -26,7 +26,7 @@ class BSCANE2 extends ExtModule(Map("JTAG_CHAIN" -> 4)) {
   val UPDATE = IO(Output(Bool()))
 }
 
-class BscanJTAG extends MultiIOModule {
+class BscanJTAG extends Module {
   val tck: Clock = IO(Output(Clock()))
   val tms: Bool = IO(Output(Bool()))
   val tdi: Bool = IO(Output(Bool()))

@@ -1,24 +1,11 @@
 package vcu128
 
-import chisel3._
-import freechips.rocketchip.config._
 import freechips.rocketchip.devices.debug._
-import freechips.rocketchip.devices.tilelink.BootROMParams
 import freechips.rocketchip.devices.tilelink.BootROMLocated
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.subsystem.MemoryPortParams
 import freechips.rocketchip.subsystem.WithInclusiveCache
-import freechips.rocketchip.rocket.{
-  RocketCoreParams,
-  MulDivParams,
-  DCacheParams,
-  ICacheParams
-}
-import freechips.rocketchip.tile.{RocketTileParams, XLen}
-import freechips.rocketchip.util._
-import boom.common.WithNLargeBooms
-import boom.common.WithNMediumBooms
-import boom.common.BoomTileAttachParams
+import org.chipsalliance.cde.config.Config
 
 class WithBootROMResetAddress(resetAddress: BigInt)
     extends Config((_, _, up) => { case BootROMLocated(x) =>
@@ -26,14 +13,14 @@ class WithBootROMResetAddress(resetAddress: BigInt)
     })
 
 class WithIDBits(n: Int)
-    extends Config((site, here, up) => {
+    extends Config((_, _, up) => {
       case ExtMem =>
         up(ExtMem).map(x => x.copy(master = x.master.copy(idBits = n)))
       case ExtBus => up(ExtBus).map(x => x.copy(idBits = n))
     })
 
 class WithCustomMMIOPort
-    extends Config((site, here, up) => { case ExtBus =>
+    extends Config((site, _, _) => { case ExtBus =>
       Some(
         MasterPortParams(
           base = BigInt("60000000", 16),
@@ -45,7 +32,7 @@ class WithCustomMMIOPort
     })
 
 class WithCustomMemPort
-    extends Config((site, here, up) => { case ExtMem =>
+    extends Config((site, _, _) => { case ExtMem =>
       Some(
         MemoryPortParams(
           MasterPortParams(
@@ -60,7 +47,7 @@ class WithCustomMemPort
     })
 
 class WithCFlush
-    extends Config((site, here, up) => { case TilesLocated(InSubsystem) =>
+    extends Config((_, _, up) => { case TilesLocated(InSubsystem) =>
       up(TilesLocated(InSubsystem)) map {
         case tp: RocketTileAttachParams =>
           tp.copy(tileParams =
@@ -70,6 +57,7 @@ class WithCFlush
               )
             )
           )
+        /*
         case tp: BoomTileAttachParams =>
           tp.copy(tileParams =
             tp.tileParams.copy(
@@ -78,12 +66,13 @@ class WithCFlush
               )
             )
           )
+         */
         case t => t
       }
     })
 
 class WithCustomJtag
-    extends Config((site, here, up) => { case JtagDTMKey =>
+    extends Config((_, _, _) => { case JtagDTMKey =>
       new JtagDTMConfig(
         idcodeVersion = 1,
         idcodePartNum = 0,
