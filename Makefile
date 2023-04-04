@@ -21,10 +21,7 @@ $(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).fir: $(call LOOKUP_SCALA_SRCS,$(SRC)) $
 	$(MILL) vcu128.runMain freechips.rocketchip.system.Generator -td $(BUILD) -T $(TOP_MODULE_PROJECT).$(TOP_MODULE) -C $(TOP_MODULE_PROJECT).$(CONFIG)
 
 $(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).v: $(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).fir
-	$(MILL) vcu128.runMain firrtl.stage.FirrtlMain -i $< -o $@ -X verilog
-	cp $@ $@.bak
-	cp prologue.v $@
-	sed 's/wire \[..:0\] coreMonitorBundle/(* mark_debug="true" *) \0/g' $@.bak >> $@
+	firtool --disable-all-randomization $< -o $@
 
 clean:
 	rm -rf build/*
