@@ -1,1 +1,1 @@
-../../build/vcu128.RocketConfig.sv.v
+../../build/vcu128.RocketConfig.sv

@@ -21,9 +21,11 @@ $(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).fir: $(call LOOKUP_SCALA_SRCS,$(SRC)) $
 	$(MILL) vcu128.runMain freechips.rocketchip.system.Generator -td $(BUILD) -T $(TOP_MODULE_PROJECT).$(TOP_MODULE) -C $(TOP_MODULE_PROJECT).$(CONFIG)
 
 $(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).sv: $(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).fir
+# scala firrtl compiler
+# $(MILL) vcu128.runMain firrtl.stage.FirrtlMain --emission-options disableMemRandomization,disableRegisterRandomization -i $< -o $@ -X verilog
 # vivado cannot infer sram in dcache
 # firtool --disable-all-randomization $< -o $@
-	$(MILL) vcu128.runMain firrtl.stage.FirrtlMain --emission-options disableMemRandomization,disableRegisterRandomization -i $< -o $@ -X verilog
+	firtool --lower-memories --disable-all-randomization $< -o $@
 
 clean:
 	rm -rf build/*
