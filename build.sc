@@ -12,8 +12,8 @@ val defaultVersions = Map(
   "chisel3-plugin" -> ("edu.berkeley.cs", "3.6.0-RC3", true),
   "paradise" -> ("org.scalamacros", "2.1.1", true),
   "json4s-jackson" -> ("org.json4s", "4.0.6", false),
-  "chiseltest" -> ("edu.berkeley.cs", "0.5.0", false),
-  "scalatest" -> ("org.scalatest", "3.2.10", false)
+  "chiseltest" -> ("edu.berkeley.cs", "0.6.0-RC3", false),
+  "scalatest" -> ("org.scalatest", "3.2.15", false)
 )
 
 val commonScalaVersion = "2.13.10"
