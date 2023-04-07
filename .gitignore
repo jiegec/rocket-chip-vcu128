@@ -68,3 +68,4 @@ hw_handoff/*
 !build.sc
 !gdbinit
 !reset.tcl
+!*.nix
