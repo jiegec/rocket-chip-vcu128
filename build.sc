@@ -3,7 +3,7 @@ import mill.scalalib.publish._
 import scalalib._
 import scalafmt._
 import coursier.maven.MavenRepository
-import $ivy.`com.goyeau::mill-scalafix_mill0.10:0.2.8`
+import $ivy.`com.goyeau::mill-scalafix_mill0.11:0.3.1`
 import com.goyeau.mill.scalafix.ScalafixModule
 
 // learned from https://github.com/OpenXiangShan/fudian/blob/main/build.sc
@@ -125,7 +125,7 @@ object vcu128 extends CommonModule with ScalafmtModule {
       inclusiveCache
     )
 
-  object test extends Tests with TestModule.ScalaTest {
+  object test extends ScalaTests with TestModule.ScalaTest {
     override def ivyDeps = super.ivyDeps() ++ Agg(
       getVersion("scalatest")
     )
