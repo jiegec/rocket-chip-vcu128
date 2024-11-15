@@ -251,7 +251,8 @@ void step_mmio() {
       // THRE | TEMT
       uint64_t lsr = (1L << 5) | (1L << 6);
       r_data = lsr << 32;
-    } else if (pending_read_addr == serial_addr) {
+    } else if (pending_read_addr == serial_addr ||
+               pending_read_addr == serial_addr + 0xc) {
       // ignored
       r_data = 0;
     } else {
