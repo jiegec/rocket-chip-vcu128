@@ -251,7 +251,11 @@ void step_mmio() {
       // THRE | TEMT
       uint64_t lsr = (1L << 5) | (1L << 6);
       r_data = lsr << 32;
+    } else if (pending_read_addr == serial_addr) {
+      // ignored
+      r_data = 0;
     } else {
+      printf("Unhandled mmio read from %lx\n", pending_read_addr);
       r_data = 0;
     }
 
@@ -317,10 +321,22 @@ void step_mmio() {
                  &top->M_AXI_MMIO_wdata);
 
       uint64_t input = wdata.get_ui();
+      static bool dlab = 0;
+      // serial
       if (pending_write_addr == serial_addr) {
-        // serial
-        printf("%c", (char)(input & 0xFF));
-        fflush(stdout);
+        if (!dlab) {
+          printf("%c", (char)(input & 0xFF));
+          fflush(stdout);
+        }
+      } else if (pending_write_addr == serial_addr + 0x4 ||
+                 pending_write_addr == serial_addr + 0x8 ||
+                 pending_write_addr == serial_addr + 0x10 ||
+                 pending_write_addr == serial_addr + 0x1c) {
+        // ignored
+      } else if (pending_write_addr == serial_addr + 0xc) {
+        dlab = ((input >> 32) >> 7) & 1;
+      } else {
+        printf("Unhandled mmio write to %lx\n", pending_write_addr);
       }
 
       pending_write_addr += 1L << pending_write_size;
