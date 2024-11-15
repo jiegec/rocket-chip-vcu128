@@ -127,3 +127,10 @@ class BOOMConfig
         new WithNMediumBooms(2) ++
         new BaseConfig
     )
+
+// set reset address to 0x80000000 for simulation
+class SimConfig
+    extends Config(
+      new WithBootROMResetAddress(0x80000000L) ++
+        new RocketConfig
+    )
