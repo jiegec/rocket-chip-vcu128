@@ -1,7 +1,9 @@
 #include <Vtestbench_rocketchip.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include <gmpxx.h>
 #include <iostream>
+#include <map>
 #include <verilated.h>
 
 #if VM_TRACE
@@ -26,8 +28,366 @@ double sc_time_stamp() { // Called by $time in Verilog
 // TODO Provide command-line options like vcd filename, timeout count, etc.
 const long timeout = 100000000L;
 
+// memory mapping
+typedef uint32_t mem_t;
+std::map<uint64_t, mem_t> memory;
+
+// align to mem_t boundary
+uint64_t align(uint64_t addr) { return (addr / sizeof(mem_t)) * sizeof(mem_t); }
+
+const uint64_t MEM_AXI_DATA_WIDTH = 64;
+const uint64_t MEM_AXI_DATA_BYTES = MEM_AXI_DATA_WIDTH / 8;
+const uint64_t MMIO_AXI_DATA_WIDTH = 64;
+const uint64_t MMIO_AXI_DATA_BYTES = MMIO_AXI_DATA_WIDTH / 8;
+
+// serial
+// default at 0x60201000
+uint64_t serial_addr = 0x60201000;
+
+// initialize signals
+void init() {
+  top->M_AXI_awready = 0;
+  top->M_AXI_wready = 0;
+  top->M_AXI_bvalid = 0;
+
+  top->M_AXI_arready = 0;
+  top->M_AXI_rvalid = 0;
+
+  top->M_AXI_MMIO_awready = 0;
+  top->M_AXI_MMIO_wready = 0;
+  top->M_AXI_MMIO_bvalid = 0;
+
+  top->M_AXI_MMIO_arready = 0;
+  top->M_AXI_MMIO_rvalid = 0;
+}
+
+// step per clock fall
+void step_mem() {
+  // handle read
+  static bool pending_read = false;
+  static uint64_t pending_read_id = 0;
+  static uint64_t pending_read_addr = 0;
+  static uint64_t pending_read_len = 0;
+  static uint64_t pending_read_size = 0;
+
+  if (!pending_read) {
+    if (top->M_AXI_arvalid) {
+      top->M_AXI_arready = 1;
+      pending_read = true;
+      pending_read_id = top->M_AXI_arid;
+      pending_read_addr = top->M_AXI_araddr;
+      pending_read_len = top->M_AXI_arlen;
+      pending_read_size = top->M_AXI_arsize;
+    }
+
+    top->M_AXI_rvalid = 0;
+  } else {
+    top->M_AXI_arready = 0;
+
+    top->M_AXI_rvalid = 1;
+    top->M_AXI_rid = pending_read_id;
+    mpz_class r_data;
+
+    uint64_t aligned =
+        (pending_read_addr / MEM_AXI_DATA_BYTES) * MEM_AXI_DATA_BYTES;
+    for (int i = 0; i < MEM_AXI_DATA_BYTES / sizeof(mem_t); i++) {
+      uint64_t addr = aligned + i * sizeof(mem_t);
+      mem_t r = memory[addr];
+      mpz_class res = r;
+      res <<= (i * (sizeof(mem_t) * 8));
+      r_data += res;
+    }
+
+    mpz_class mask = 1;
+    mask <<= (1L << pending_read_size) * 8;
+    mask -= 1;
+
+    mpz_class shifted_mask =
+        mask << ((pending_read_addr & (MEM_AXI_DATA_BYTES - 1)) * 8);
+    r_data &= shifted_mask;
+
+    // top->M_AXI_rdata = r_data & shifted_mask;
+    memset(&top->M_AXI_rdata, 0, sizeof(top->M_AXI_rdata));
+    mpz_export(&top->M_AXI_rdata, NULL, -1, 4, -1, 0, r_data.get_mpz_t());
+    top->M_AXI_rlast = pending_read_len == 0;
+
+    // RREADY might be stale without eval()
+    top->eval();
+    if (top->M_AXI_rready) {
+      if (pending_read_len == 0) {
+        pending_read = false;
+      } else {
+        pending_read_addr += 1 << pending_read_size;
+        pending_read_len--;
+      }
+    }
+  }
+
+  // handle write
+  static bool pending_write = false;
+  static bool pending_write_finished = false;
+  static uint64_t pending_write_addr = 0;
+  static uint64_t pending_write_len = 0;
+  static uint64_t pending_write_size = 0;
+  static uint64_t pending_write_id = 0;
+  if (!pending_write) {
+    // idle
+    if (top->M_AXI_awvalid) {
+      top->M_AXI_awready = 1;
+      pending_write = true;
+      pending_write_addr = top->M_AXI_awaddr;
+      pending_write_len = top->M_AXI_awlen;
+      pending_write_size = top->M_AXI_awsize;
+      pending_write_id = top->M_AXI_awid;
+      pending_write_finished = false;
+    }
+    top->M_AXI_wready = 0;
+    top->M_AXI_bvalid = 0;
+  } else if (!pending_write_finished) {
+    // writing
+    top->M_AXI_awready = 0;
+    top->M_AXI_wready = 1;
+
+    // WVALID might be stale without eval()
+    top->eval();
+    if (top->M_AXI_wvalid) {
+      mpz_class mask = 1;
+      mask <<= 1L << pending_write_size;
+      mask -= 1;
+
+      mpz_class shifted_mask =
+          mask << (pending_write_addr & (MEM_AXI_DATA_BYTES - 1));
+      mpz_class wdata;
+      mpz_import(wdata.get_mpz_t(), MEM_AXI_DATA_BYTES / 4, -1, 4, -1, 0,
+                 &top->M_AXI_wdata);
+
+      uint64_t aligned =
+          pending_write_addr / MEM_AXI_DATA_BYTES * MEM_AXI_DATA_BYTES;
+      for (int i = 0; i < MEM_AXI_DATA_BYTES / sizeof(mem_t); i++) {
+        uint64_t addr = aligned + i * sizeof(mem_t);
+
+        mpz_class local_wdata_mpz = wdata >> (i * (sizeof(mem_t) * 8));
+        mem_t local_wdata = local_wdata_mpz.get_ui();
+
+        uint64_t local_wstrb = (top->M_AXI_wstrb >> (i * sizeof(mem_t))) & 0xfL;
+
+        mpz_class local_mask_mpz = shifted_mask >> (i * sizeof(mem_t));
+        uint64_t local_mask = local_mask_mpz.get_ui() & 0xfL;
+        if (local_mask & local_wstrb) {
+          mem_t base = memory[addr];
+          mem_t input = local_wdata;
+          uint64_t be = local_mask & local_wstrb;
+
+          mem_t muxed = 0;
+          for (int i = 0; i < sizeof(mem_t); i++) {
+            mem_t sel;
+            if (((be >> i) & 1) == 1) {
+              sel = (input >> (i * 8)) & 0xff;
+            } else {
+              sel = (base >> (i * 8)) & 0xff;
+            }
+            muxed |= (sel << (i * 8));
+          }
+
+          memory[addr] = muxed;
+        }
+      }
+
+      uint64_t input = wdata.get_ui();
+      pending_write_addr += 1L << pending_write_size;
+      pending_write_len--;
+      if (top->M_AXI_wlast) {
+        assert(pending_write_len == -1);
+        pending_write_finished = true;
+      }
+    }
+
+    top->M_AXI_bvalid = 0;
+  } else {
+    // finishing
+    top->M_AXI_awready = 0;
+    top->M_AXI_wready = 0;
+    top->M_AXI_bvalid = 1;
+    top->M_AXI_bresp = 0;
+    top->M_AXI_bid = pending_write_id;
+
+    // BREADY might be stale without eval()
+    top->eval();
+    if (top->M_AXI_bready) {
+      pending_write = false;
+      pending_write_finished = false;
+    }
+  }
+}
+
+// step per clock fall
+void step_mmio() {
+  // handle read
+  static bool pending_read = false;
+  static uint64_t pending_read_id = 0;
+  static uint64_t pending_read_addr = 0;
+  static uint64_t pending_read_len = 0;
+  static uint64_t pending_read_size = 0;
+
+  if (!pending_read) {
+    if (top->M_AXI_MMIO_arvalid) {
+      top->M_AXI_MMIO_arready = 1;
+      pending_read = true;
+      pending_read_id = top->M_AXI_MMIO_arid;
+      pending_read_addr = top->M_AXI_MMIO_araddr;
+      pending_read_len = top->M_AXI_MMIO_arlen;
+      pending_read_size = top->M_AXI_MMIO_arsize;
+    }
+
+    top->M_AXI_MMIO_rvalid = 0;
+  } else {
+    top->M_AXI_MMIO_arready = 0;
+
+    top->M_AXI_MMIO_rvalid = 1;
+    top->M_AXI_MMIO_rid = pending_read_id;
+    mpz_class r_data;
+    if (pending_read_addr == serial_addr + 0x14) {
+      // serial lsr
+      // THRE | TEMT
+      uint64_t lsr = (1L << 5) | (1L << 6);
+      r_data = lsr << 32;
+    } else {
+      r_data = 0;
+    }
+
+    mpz_class mask = 1;
+    mask <<= (1L << pending_read_size) * 8;
+    mask -= 1;
+
+    mpz_class shifted_mask =
+        mask << ((pending_read_addr & (MMIO_AXI_DATA_BYTES - 1)) * 8);
+    r_data &= shifted_mask;
+
+    // top->M_AXI_MMIO_RDATA = r_data & shifted_mask;
+    memset(&top->M_AXI_MMIO_rdata, 0, sizeof(top->M_AXI_MMIO_rdata));
+    mpz_export(&top->M_AXI_MMIO_rdata, NULL, -1, 4, -1, 0, r_data.get_mpz_t());
+    top->M_AXI_MMIO_rlast = pending_read_len == 0;
+
+    // RREADY might be stale without eval()
+    top->eval();
+    if (top->M_AXI_MMIO_rready) {
+      if (pending_read_len == 0) {
+        pending_read = false;
+      } else {
+        pending_read_addr += 1 << pending_read_size;
+        pending_read_len--;
+      }
+    }
+  }
+
+  // handle write
+  static bool pending_write = false;
+  static bool pending_write_finished = false;
+  static uint64_t pending_write_addr = 0;
+  static uint64_t pending_write_len = 0;
+  static uint64_t pending_write_size = 0;
+  static uint64_t pending_write_id = 0;
+  if (!pending_write) {
+    if (top->M_AXI_MMIO_awvalid) {
+      top->M_AXI_MMIO_awready = 1;
+      pending_write = 1;
+      pending_write_addr = top->M_AXI_MMIO_awaddr;
+      pending_write_len = top->M_AXI_MMIO_awlen;
+      pending_write_size = top->M_AXI_MMIO_awsize;
+      pending_write_id = top->M_AXI_MMIO_awid;
+      pending_write_finished = 0;
+    }
+    top->M_AXI_MMIO_wready = 0;
+    top->M_AXI_MMIO_bvalid = 0;
+  } else if (!pending_write_finished) {
+    top->M_AXI_MMIO_awready = 0;
+    top->M_AXI_MMIO_wready = 1;
+
+    // WVALID might be stale without eval()
+    top->eval();
+    if (top->M_AXI_MMIO_wvalid) {
+      mpz_class mask = 1;
+      mask <<= 1L << pending_write_size;
+      mask -= 1;
+
+      mpz_class shifted_mask =
+          mask << (pending_write_addr & (MMIO_AXI_DATA_BYTES - 1));
+      mpz_class wdata;
+      mpz_import(wdata.get_mpz_t(), MMIO_AXI_DATA_BYTES / 4, -1, 4, -1, 0,
+                 &top->M_AXI_MMIO_wdata);
+
+      uint64_t input = wdata.get_ui();
+      if (pending_write_addr == serial_addr) {
+        // serial
+        printf("%c", (char)(input & 0xFF));
+        fflush(stdout);
+      }
+
+      pending_write_addr += 1L << pending_write_size;
+      pending_write_len--;
+      if (top->M_AXI_MMIO_wlast) {
+        assert(pending_write_len == -1);
+        pending_write_finished = true;
+      }
+    }
+
+    top->M_AXI_MMIO_bvalid = 0;
+  } else {
+    // finishing
+    top->M_AXI_MMIO_awready = 0;
+    top->M_AXI_MMIO_wready = 0;
+    top->M_AXI_MMIO_bvalid = 1;
+    top->M_AXI_MMIO_bresp = 0;
+    top->M_AXI_MMIO_bid = pending_write_id;
+
+    // BREADY might be stale without eval()
+    top->eval();
+    if (top->M_AXI_MMIO_bready) {
+      pending_write = false;
+      pending_write_finished = false;
+    }
+  }
+}
+
+// load file
+void load_file(const std::string &path) {
+  // load as bin
+  FILE *fp = fopen(path.c_str(), "rb");
+  assert(fp);
+  uint64_t addr = 0x80000000;
+
+  // read whole file and pad to multiples of mem_t
+  fseek(fp, 0, SEEK_END);
+  size_t size = ftell(fp);
+  fseek(fp, 0, SEEK_SET);
+  size_t padded_size = align(size + sizeof(mem_t) - 1);
+  uint8_t *buffer = new uint8_t[padded_size];
+  memset(buffer, 0, padded_size);
+
+  size_t offset = 0;
+  while (!feof(fp)) {
+    ssize_t read = fread(&buffer[offset], 1, size - offset, fp);
+    if (read <= 0) {
+      break;
+    }
+    offset += read;
+  }
+
+  for (int i = 0; i < padded_size; i += sizeof(mem_t)) {
+    memory[addr + i] = *((mem_t *)&buffer[i]);
+  }
+  fprintf(stderr, "> Loaded %ld bytes from BIN %s\n", size, path.c_str());
+  fclose(fp);
+  delete[] buffer;
+}
+
 int main(int argc, char **argv) {
   Verilated::commandArgs(argc, argv); // Remember args
+  if (argc < 2) {
+    fprintf(stderr, "Usage: %s memory_content\n", argv[0]);
+    return 1;
+  }
+  load_file(argv[1]);
   top = new Vtestbench_rocketchip;
 
 #if VM_TRACE                    // If verilator was invoked with --trace
@@ -91,6 +451,8 @@ int main(int argc, char **argv) {
     }
     if ((main_time % 10) == 6) {
       top->clock = 0;
+      step_mem();
+      step_mmio();
     }
     top->eval(); // Evaluate model
 #if VM_TRACE

@@ -4,6 +4,7 @@
 pkgs.mkShell {
   buildInputs = with pkgs; [
     circt # 1.34.0
+    gmp
   ];
 }
 
