@@ -26,7 +26,7 @@ double sc_time_stamp() { // Called by $time in Verilog
 }
 
 // TODO Provide command-line options like vcd filename, timeout count, etc.
-const long timeout = 100000000L;
+const long timeout = 1000000000L;
 
 // memory mapping
 typedef uint32_t mem_t;
