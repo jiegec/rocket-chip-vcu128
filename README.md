@@ -37,56 +37,41 @@ Software modifications:
 - [Custom U-Boot](https://github.com/jiegec/u-boot/tree/rocket-chip-vcu128) [Changes](https://github.com/jiegec/u-boot/compare/master...jiegec:u-boot:rocket-chip-vcu128?expand=1)
 - [Custom Linux](https://github.com/jiegec/linux/tree/rocket-chip-vcu128) [Changes](https://github.com/jiegec/linux/compare/master...jiegec:linux:rocket-chip-vcu128?expand=1)
 
-Boot [Custom OpenSBI](https://github.com/jiegec/opensbi/tree/rocket-chip-vcu128):
+Boot custom OpenSBI in M-mode with custom U-Boot in S-mode:
 
 ```shell
-# in opensbi
-$ make CROSS_COMPILE=riscv64-linux-gnu- -j4 PLATFORM=rocket-chip-vcu128-dual-core
-# in this repo
-$ python3 bootrom/boot.py ~/opensbi/build/platform/rocket-chip-vcu128-dual-core/firmware/fw_jump.bin /dev/ttyUSB2
-Firmware Base             : 0x80000000
-Firmware Size             : 68 KB
-Runtime SBI Version       : 0.2
-
-Boot HART ID              : 0
-Boot HART Domain          : root
-Boot HART ISA             : rv64imafdcsux
-Boot HART Features        : scounteren,mcounteren
-```
-
-Boot [Custom U-Boot](https://github.com/jiegec/u-boot/tree/rocket-chip-vcu128) in M-mode:
-
-```shell
+# place custom opensbi at ~/opensbi, custom uboot at ~/u-boot
 # in u-boot
-$ make rocket-chip-vcu128_defconfig
-$ make CROSS_COMPILE=riscv64-linux-gnu- -j4
+$ ./build.sh
 # in this repo
-$ python3 bootrom/boot.py /path/to/u-boot/u-boot.bin /dev/ttyUSB2
-U-Boot 2022.01-00028-g83ca2695ae-dirty (Feb 19 2023 - 19:50:19 +0800)
+$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128-dual-core/firmware/fw_payload.bin /dev/ttyUSB2
+Boot HART ID              : 1
+Boot HART Domain          : root
+Boot HART Priv Version    : v1.11
+Boot HART Base ISA        : rv64imafdcx
+Boot HART ISA Extensions  : sdtrig
+Boot HART PMP Count       : 8
+Boot HART PMP Granularity : 2 bits
+Boot HART PMP Address Bits: 30
+Boot HART MHPM Info       : 0 (0x00000000)
+Boot HART Debug Triggers  : 1 triggers
+Boot HART MIDELEG         : 0x0000000000000222
+Boot HART MEDELEG         : 0x000000000000b109
 
-CPU:   rv64imafdc
+
+U-Boot 2024.10-g33523922a4ac (Nov 16 2024 - 11:29:29 +0800)
+
+CPU:   sifive,rocket0
 Model: freechips,rocketchip-unknown
 DRAM:  512 MiB
+Core:  16 devices, 12 uclasses, devicetree: board
 Loading Environment from nowhere... OK
 In:    serial@60200000
 Out:   serial@60200000
 Err:   serial@60200000
 Net:   AXI EMAC: 60400000, phyaddr 3, interface sgmii
 eth0: eth0@60400000
-=> 
-```
-
-Boot custom OpenSBI in M-mode with U-Boot in S-mode:
-
-```shell
-# in u-boot
-$ make rocket-chip-vcu128-smode_defconfig
-$ make CROSS_COMPILE=riscv64-linux-gnu- -j4
-# in opensbi
-$ make CROSS_COMPILE=riscv64-linux-gnu- -j4 PLATFORM=rocket-chip-vcu128-dual-core FW_PAYLOAD_PATH=$HOME/u-boot/u-boot-nodtb.bin
-# in this repo
-$ python3 boot.py ~/opensbi/build/platform/rocket-chip-vcu128/firmware/fw_payload.bin /dev/ttyUSB2
-# same as above
+=>
 ```
 
 Run executable from TFTP:
