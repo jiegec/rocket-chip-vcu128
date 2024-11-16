@@ -269,6 +269,9 @@ void step_mmio() {
       // MDIO Read Data (0x50C)
       // bit 16: MDIO ready
       r_data = (uint64_t)(1 << 16) << 32;
+    } else if (pending_read_addr == emac_addr + 0x704) {
+      // Unicast Address Word 1
+      r_data = 0;
     } else {
       printf("Unhandled mmio read from %lx\n", pending_read_addr);
       r_data = 0;
