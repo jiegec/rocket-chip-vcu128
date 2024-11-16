@@ -4,6 +4,8 @@
 #include <gmpxx.h>
 #include <iostream>
 #include <map>
+#include <sys/time.h>
+#include <signal.h>
 #include <verilated.h>
 
 #if VM_TRACE
@@ -398,6 +400,19 @@ void load_file(const std::string &path) {
   delete[] buffer;
 }
 
+uint64_t get_time_us() {
+  struct timeval tv = {};
+  gettimeofday(&tv, NULL);
+  return tv.tv_sec * 1000000 + tv.tv_usec;
+}
+
+bool finished = false;
+
+void ctrlc_handler(int arg) {
+  cout << "Received Ctrl-C" << endl;
+  finished = true;
+}
+
 int main(int argc, char **argv) {
   Verilated::commandArgs(argc, argv); // Remember args
   if (argc < 2) {
@@ -406,6 +421,8 @@ int main(int argc, char **argv) {
   }
   load_file(argv[1]);
   top = new Vtestbench_rocketchip;
+
+  signal(SIGINT, ctrlc_handler);
 
 #if VM_TRACE                    // If verilator was invoked with --trace
   Verilated::traceEverOn(true); // Verilator must compute traced signals
@@ -459,11 +476,14 @@ int main(int argc, char **argv) {
 
   cout << "Starting simulation!\n";
 
-  while (!Verilated::gotFinish() && main_time < timeout) {
+  uint64_t begin = get_time_us();
+  uint64_t clocks = 0;
+  while (!Verilated::gotFinish() && main_time < timeout && !finished) {
     if (main_time > 1000) {
       top->reset = 0; // Deassert reset
     }
     if ((main_time % 10) == 1) {
+      clocks++;
       top->clock = 1; // Toggle clock
     }
     if ((main_time % 10) == 6) {
@@ -532,6 +552,7 @@ int main(int argc, char **argv) {
     }
   }
 
+  uint64_t elapsed_us = get_time_us() - begin;
   if (main_time >= timeout) {
     cout << "Simulation terminated by timeout at time " << main_time
          << " (cycle " << main_time / 10 << ")" << endl;
@@ -540,6 +561,8 @@ int main(int argc, char **argv) {
     cout << "Simulation completed at time " << main_time << " (cycle "
          << main_time / 10 << ")" << endl;
   }
+  cout << "Simulation speed " << (double)clocks * 1000000 / elapsed_us
+       << " mcycle/s" << endl;
 
   // Run for 10 more clocks
   vluint64_t end_time = main_time + 100;
