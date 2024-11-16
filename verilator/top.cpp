@@ -4,8 +4,8 @@
 #include <gmpxx.h>
 #include <iostream>
 #include <map>
-#include <sys/time.h>
 #include <signal.h>
+#include <sys/time.h>
 #include <verilated.h>
 
 #if VM_TRACE
@@ -415,21 +415,38 @@ void ctrlc_handler(int arg) {
 
 int main(int argc, char **argv) {
   Verilated::commandArgs(argc, argv); // Remember args
-  if (argc < 2) {
-    fprintf(stderr, "Usage: %s memory_content\n", argv[0]);
+  bool trace = false;
+  char opt;
+  while ((opt = getopt(argc, argv, "t")) != -1) {
+    switch (opt) {
+    case 't':
+      trace = true;
+      break;
+    default: /* '?' */
+      fprintf(stderr, "Usage: %s [-t] memory_content\n", argv[0]);
+      return 1;
+    }
+  }
+
+  if (optind >= argc) {
+    fprintf(stderr, "Usage: %s [-t] memory_content\n", argv[0]);
     return 1;
   }
-  load_file(argv[1]);
+
+  load_file(argv[optind]);
   top = new Vtestbench_rocketchip;
 
   signal(SIGINT, ctrlc_handler);
 
-#if VM_TRACE                    // If verilator was invoked with --trace
-  Verilated::traceEverOn(true); // Verilator must compute traced signals
-  VL_PRINTF("Enabling waves...\n");
-  VerilatedVcdC *tfp = new VerilatedVcdC;
-  top->trace(tfp, 99);   // Trace 99 levels of hierarchy
-  tfp->open("dump.vcd"); // Open the dump file
+#if VM_TRACE // If verilator was invoked with --trace
+  VerilatedVcdC *tfp = NULL;
+  if (trace) {
+    Verilated::traceEverOn(true); // Verilator must compute traced signals
+    VL_PRINTF("Enabling waves...\n");
+    tfp = new VerilatedVcdC;
+    top->trace(tfp, 99);   // Trace 99 levels of hierarchy
+    tfp->open("dump.vcd"); // Open the dump file
+  }
 #endif
 
   top->reset = 1;
