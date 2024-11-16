@@ -34,7 +34,7 @@ try:
                 time.sleep(timeout)
 
     out.close()
-    os.execlp('screen', 'screen', args[1], '115200')
+    os.execlp('screen', 'screen', '-L', args[1], '115200')
 except getopt.GetoptError as err:
     print(str(err))
     print('Usage: send.py [-s] file tty')
