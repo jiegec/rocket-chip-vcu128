@@ -99,10 +99,6 @@ class RocketConfig
         new WithoutTLMonitors ++
         new WithIDBits(5) ++
         new WithCFlush ++
-        // new WithBitManip ++
-        // new WithBitManipCrypto ++
-        // new WithCryptoNIST ++
-        // new WithCryptoSM ++
         new WithCustomJtag ++
         new WithJtagDTM ++
         // Rocket Core
@@ -116,10 +112,6 @@ class BOOMConfig
         new WithoutTLMonitors ++
         new WithIDBits(5) ++
         new WithCFlush ++
-        // new WithBitManip ++
-        // new WithBitManipCrypto ++
-        // new WithCryptoNIST ++
-        // new WithCryptoSM ++
         new WithCustomJtag ++
         new WithJtagDTM ++
         // BOOM Core
