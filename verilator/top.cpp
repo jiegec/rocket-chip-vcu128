@@ -1,5 +1,6 @@
 #include <Vtestbench_rocketchip.h>
 #include <arpa/inet.h>
+#include <cstdint>
 #include <fcntl.h>
 #include <gmpxx.h>
 #include <iostream>
@@ -45,6 +46,9 @@ const uint64_t MMIO_AXI_DATA_BYTES = MMIO_AXI_DATA_WIDTH / 8;
 // serial
 // default at 0x60201000
 uint64_t serial_addr = 0x60201000;
+
+// axi ethernet
+uint64_t emac_addr = 0x60400000;
 
 // initialize signals
 void init() {
@@ -257,6 +261,14 @@ void step_mmio() {
                pending_read_addr == serial_addr + 0xc) {
       // ignored
       r_data = 0;
+    } else if (pending_read_addr == emac_addr + 0x504) {
+      // MDIO Control Word (0x504)
+      // bit 7: MDIO ready
+      r_data = (uint64_t)(1 << 7) << 32;
+    } else if (pending_read_addr == emac_addr + 0x50c) {
+      // MDIO Read Data (0x50C)
+      // bit 16: MDIO ready
+      r_data = (uint64_t)(1 << 16) << 32;
     } else {
       printf("Unhandled mmio read from %lx\n", pending_read_addr);
       r_data = 0;
@@ -338,6 +350,14 @@ void step_mmio() {
         // ignored
       } else if (pending_write_addr == serial_addr + 0xc) {
         dlab = ((input >> 32) >> 7) & 1;
+      } else if (pending_write_addr == emac_addr + 0x500) {
+        // MDIO Setup Word (0x500)
+      } else if (pending_write_addr == emac_addr + 0x504) {
+        // MDIO Control Word (0x504)
+      } else if (pending_write_addr == emac_addr + 0x700) {
+        // Unicast Address Word 0
+      } else if (pending_write_addr == emac_addr + 0x704) {
+        // Unicast Address Word 1
       } else {
         printf("Unhandled mmio write to %lx\n", pending_write_addr);
       }
