@@ -44,7 +44,7 @@ trait CommonModule extends ScalaModule {
 
 object hardfloat extends CommonModule with SbtModule {
   override def millSourcePath =
-    os.pwd / "submodules" / "berkeley-hardfloat"
+    os.pwd / "submodules" / "berkeley-hardfloat" / "hardfloat"
 
   override def ivyDeps = super.ivyDeps() ++ Agg(
     getVersion("chisel3")
