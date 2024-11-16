@@ -67,9 +67,7 @@ class BscanJTAG extends Module {
     withClock(negClock) {
       val negCounter = RegInit(0.U(8.W))
       negCounter := negCounter + 1.U
-      tms := MuxLookup(
-        negCounter,
-        false.B,
+      tms := MuxLookup(negCounter, false.B)(
         Array(
           4.U -> tdiRegisterWire,
           5.U -> true.B,

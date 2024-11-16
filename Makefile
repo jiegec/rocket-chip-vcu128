@@ -18,7 +18,9 @@ BOOTROM := $(shell find bootrom -iname "*.img" 2> /dev/null)
 
 $(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).fir: $(call LOOKUP_SCALA_SRCS,$(SRC)) $(BOOTROM)
 	mkdir -p $(@D)
-	$(MILL) vcu128.runMain freechips.rocketchip.system.Generator -td $(BUILD) -T $(TOP_MODULE_PROJECT).$(TOP_MODULE) -C $(TOP_MODULE_PROJECT).$(CONFIG)
+	rm -f $(BUILD)/RocketChip.anno.json $(BUILD)/RocketChip.fir
+	$(MILL) vcu128.runMain freechips.rocketchip.diplomacy.Main --dir $(BUILD) --top $(TOP_MODULE_PROJECT).$(TOP_MODULE) --config $(TOP_MODULE_PROJECT).$(CONFIG)
+	mv $(BUILD)/RocketChip.fir $@
 
 $(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).sv: $(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).fir
 # scala firrtl compiler

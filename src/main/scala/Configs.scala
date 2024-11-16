@@ -1,13 +1,14 @@
 package vcu128
 
+import freechips.rocketchip.rocket._
 import freechips.rocketchip.devices.debug._
 import freechips.rocketchip.devices.tilelink.BootROMLocated
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.subsystem.MemoryPortParams
 import freechips.rocketchip.subsystem.WithInclusiveCache
 import org.chipsalliance.cde.config.Config
-import boom.common.BoomTileAttachParams
-import boom.common.WithNMediumBooms
+import boom.v4.common.BoomTileAttachParams
+import boom.v4.common.WithNMediumBooms
 
 class WithBootROMResetAddress(resetAddress: BigInt)
     extends Config((_, _, up) => { case BootROMLocated(x) =>
@@ -98,16 +99,14 @@ class RocketConfig
         new WithoutTLMonitors ++
         new WithIDBits(5) ++
         new WithCFlush ++
-        new WithBitManip ++
-        new WithBitManipCrypto ++
-        new WithCryptoNIST ++
-        new WithCryptoSM ++
+        // new WithBitManip ++
+        // new WithBitManipCrypto ++
+        // new WithCryptoNIST ++
+        // new WithCryptoSM ++
         new WithCustomJtag ++
         new WithJtagDTM ++
         // Rocket Core
-        new WithNBigCores(2) ++
-        // BOOM Core
-        // new WithNMediumBooms(2) ++
+        new WithNHugeCores(2) ++
         new BaseConfig
     )
 
@@ -117,10 +116,10 @@ class BOOMConfig
         new WithoutTLMonitors ++
         new WithIDBits(5) ++
         new WithCFlush ++
-        new WithBitManip ++
-        new WithBitManipCrypto ++
-        new WithCryptoNIST ++
-        new WithCryptoSM ++
+        // new WithBitManip ++
+        // new WithBitManipCrypto ++
+        // new WithCryptoNIST ++
+        // new WithCryptoSM ++
         new WithCustomJtag ++
         new WithJtagDTM ++
         // BOOM Core

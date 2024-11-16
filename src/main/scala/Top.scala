@@ -17,9 +17,12 @@ class RocketChip(implicit val p: Parameters) extends Module {
   val top = LazyModule(new RocketTop)
   val target = Module(top.module)
 
-  // ndreset can reset all harts
-  val childReset = reset.asBool | top.debug.map(_.ndreset).getOrElse(false.B)
-  target.reset := childReset
+  top.io_clocks.get.elements.values.foreach(_.clock := clock)
+  // Allow the debug ndreset to reset the dut, but not until the initial reset has completed
+  val childReset = (reset.asBool | top.debug
+    .map { debug => AsyncResetReg(debug.ndreset) }
+    .getOrElse(false.B)).asBool
+  top.io_clocks.get.elements.values.foreach(_.reset := childReset)
 
   require(target.mem_axi4.size == 1)
   require(target.mmio_axi4.size == 1)

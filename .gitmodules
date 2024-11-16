@@ -19,3 +19,6 @@
 [submodule "submodules/rocket-chip-inclusive-cache"]
 	path = submodules/rocket-chip-inclusive-cache
 	url = git@github.com:chipsalliance/rocket-chip-inclusive-cache.git
+[submodule "submodules/diplomacy"]
+	path = submodules/diplomacy
+	url = git@github.com:chipsalliance/diplomacy.git

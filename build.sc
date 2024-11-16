@@ -8,12 +8,14 @@ import com.goyeau.mill.scalafix.ScalafixModule
 
 // learned from https://github.com/OpenXiangShan/fudian/blob/main/build.sc
 val defaultVersions = Map(
-  "chisel3" -> ("edu.berkeley.cs", "3.6.0-RC3", false),
-  "chisel3-plugin" -> ("edu.berkeley.cs", "3.6.0-RC3", true),
+  "chisel" -> ("org.chipsalliance", "6.5.0", false),
+  "chisel-plugin" -> ("org.chipsalliance", "6.5.0", true),
   "paradise" -> ("org.scalamacros", "2.1.1", true),
   "json4s-jackson" -> ("org.json4s", "4.0.6", false),
   "chiseltest" -> ("edu.berkeley.cs", "0.6.0-RC3", false),
-  "scalatest" -> ("org.scalatest", "3.2.15", false)
+  "scalatest" -> ("org.scalatest", "3.2.15", false),
+  "sourcecode" -> ("com.lihaoyi", "0.3.1", false),
+  "mainargs" -> ("com.lihaoyi", "0.5.0", false),
 )
 
 val commonScalaVersion = "2.13.10"
@@ -47,17 +49,36 @@ object hardfloat extends CommonModule with SbtModule {
     os.pwd / "submodules" / "berkeley-hardfloat" / "hardfloat"
 
   override def ivyDeps = super.ivyDeps() ++ Agg(
-    getVersion("chisel3")
+    getVersion("chisel")
   )
 
   override def scalacPluginIvyDeps = super.scalacPluginIvyDeps() ++ Agg(
-    getVersion("chisel3-plugin")
+    getVersion("chisel-plugin")
   )
 }
 
 object apiConfigChipsalliance extends CommonModule {
   override def millSourcePath =
     os.pwd / "submodules" / "api-config-chipsalliance" / "cde"
+}
+
+object diplomacy extends CommonModule with ScalaModule {
+  override def millSourcePath =
+    os.pwd / "submodules" / "diplomacy" / "diplomacy"
+
+  override def ivyDeps = super.ivyDeps() ++ Agg(
+    getVersion("chisel"),
+    getVersion("sourcecode"),
+  )
+
+  override def moduleDeps =
+    super.moduleDeps ++ Seq(
+      apiConfigChipsalliance
+    )
+
+  override def scalacPluginIvyDeps = super.scalacPluginIvyDeps() ++ Agg(
+    getVersion("chisel-plugin")
+  )
 }
 
 object rocketChipMacros extends CommonModule {
@@ -72,17 +93,23 @@ object rocketChip extends CommonModule with SbtModule {
   override def millSourcePath = os.pwd / "submodules" / "rocket-chip"
 
   override def ivyDeps = super.ivyDeps() ++ Agg(
-    getVersion("chisel3"),
+    getVersion("chisel"),
+    getVersion("mainargs"),
     getVersion("json4s-jackson"),
     ivy"org.scala-lang:scala-reflect:$commonScalaVersion"
   )
 
   override def scalacPluginIvyDeps = super.scalacPluginIvyDeps() ++ Agg(
-    getVersion("chisel3-plugin")
+    getVersion("chisel-plugin")
   )
 
   override def moduleDeps =
-    super.moduleDeps ++ Seq(hardfloat, rocketChipMacros, apiConfigChipsalliance)
+    super.moduleDeps ++ Seq(
+      hardfloat,
+      rocketChipMacros,
+      apiConfigChipsalliance,
+      diplomacy
+    )
 
   override def scalacOptions = super.scalacOptions() ++
     Seq("-deprecation", "-unchecked")
@@ -92,7 +119,7 @@ object boom extends CommonModule with SbtModule {
   override def millSourcePath = os.pwd / "submodules" / "riscv-boom"
   override def moduleDeps = super.moduleDeps ++ Seq(rocketChip)
   override def scalacPluginIvyDeps = super.scalacPluginIvyDeps() ++ Agg(
-    getVersion("chisel3-plugin")
+    getVersion("chisel-plugin")
   )
 }
 
@@ -101,7 +128,7 @@ object inclusiveCache extends CommonModule with ScalaModule {
     os.pwd / "submodules" / "rocket-chip-inclusive-cache" / "design" / "craft" / "inclusivecache"
   override def moduleDeps = super.moduleDeps ++ Seq(rocketChip)
   override def scalacPluginIvyDeps = super.scalacPluginIvyDeps() ++ Agg(
-    getVersion("chisel3-plugin")
+    getVersion("chisel-plugin")
   )
 }
 
@@ -109,12 +136,12 @@ object vcu128 extends CommonModule with ScalafmtModule {
   override def millSourcePath = os.pwd
 
   override def ivyDeps = super.ivyDeps() ++ Agg(
-    getVersion("chisel3"),
+    getVersion("chisel"),
     getVersion("chiseltest")
   )
 
   override def scalacPluginIvyDeps = super.scalacPluginIvyDeps() ++ Agg(
-    getVersion("chisel3-plugin")
+    getVersion("chisel-plugin")
   )
 
   override def moduleDeps =
