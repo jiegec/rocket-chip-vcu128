@@ -1,6 +1,8 @@
 #include <Vtestbench_rocketchip.h>
 #include <arpa/inet.h>
 #include <cstdint>
+#include <cstdio>
+#include <curses.h>
 #include <fcntl.h>
 #include <gmpxx.h>
 #include <iostream>
@@ -18,18 +20,18 @@ using namespace std;
 // VGCDTester *top;
 Vtestbench_rocketchip *top;
 
-vluint64_t main_time =
+uint64_t sim_time =
     0; // Current simulation time
        // This is a 64-bit integer to reduce wrap over issues and
        // allow modulus.  You can also use a double, if you wish.
 
 double sc_time_stamp() { // Called by $time in Verilog
-  return main_time;      // converts to double, to match
+  return sim_time;       // converts to double, to match
                          // what SystemC does
 }
 
 // TODO Provide command-line options like vcd filename, timeout count, etc.
-const long timeout = 1000000000L;
+const uint64_t timeout_cycles = 1000000000L;
 
 // memory mapping
 typedef uint32_t mem_t;
@@ -252,15 +254,40 @@ void step_mmio() {
     top->M_AXI_MMIO_rvalid = 1;
     top->M_AXI_MMIO_rid = pending_read_id;
     mpz_class r_data;
-    if (pending_read_addr == serial_addr + 0x14) {
-      // serial lsr
+    static std::vector<char> serial_recv_fifo;
+    int ch = getch();
+    if (ch != ERR) {
+      serial_recv_fifo.push_back(ch);
+      top->interrupts |= 1;
+    }
+    if (pending_read_addr == serial_addr) {
+      // Receiver Holding Register
+      if (serial_recv_fifo.size() > 0) {
+        r_data = serial_recv_fifo[0];
+        serial_recv_fifo.erase(serial_recv_fifo.begin());
+
+        if (serial_recv_fifo.size() == 0) {
+          top->interrupts &= ~1;
+        }
+      } else {
+        // ignored
+        r_data = 0;
+      }
+    } else if (pending_read_addr == serial_addr + 0x4) {
+      // Interrupt Enable Register
+      r_data = 0;
+    } else if (pending_read_addr == serial_addr + 0xc) {
+      // Line Control Register
+      r_data = 0;
+    } else if (pending_read_addr == serial_addr + 0x14) {
+      // Line Status Register
       // THRE | TEMT
       uint64_t lsr = (1L << 5) | (1L << 6);
+      if (serial_recv_fifo.size() > 0) {
+        // data ready
+        lsr |= (1L << 0);
+      }
       r_data = lsr << 32;
-    } else if (pending_read_addr == serial_addr ||
-               pending_read_addr == serial_addr + 0xc) {
-      // ignored
-      r_data = 0;
     } else if (pending_read_addr == emac_addr + 0x504) {
       // MDIO Control Word (0x504)
       // bit 7: MDIO ready
@@ -343,8 +370,16 @@ void step_mmio() {
       // serial
       if (pending_write_addr == serial_addr) {
         if (!dlab) {
-          printf("%c", (char)(input & 0xFF));
-          fflush(stdout);
+          static FILE *fp = NULL;
+          if (!fp) {
+            fp = fopen("console.log", "w");
+            assert(fp);
+          }
+          char ch = (char)(input & 0xFF);
+          fputc(ch, fp);
+          fflush(fp);
+          if (ch != '\r')
+            addch(ch);
         }
       } else if (pending_write_addr == serial_addr + 0x4 ||
                  pending_write_addr == serial_addr + 0x8 ||
@@ -417,7 +452,7 @@ void load_file(const std::string &path, uint64_t addr = 0x80000000) {
   for (int i = 0; i < padded_size; i += sizeof(mem_t)) {
     memory[addr + i] = *((mem_t *)&buffer[i]);
   }
-  fprintf(stderr, "> Loaded %ld bytes from BIN %s\n", size, path.c_str());
+  printw("> Loaded %ld bytes from BIN %s\n", size, path.c_str());
   fclose(fp);
   delete[] buffer;
 }
@@ -431,11 +466,20 @@ uint64_t get_time_us() {
 bool finished = false;
 
 void ctrlc_handler(int arg) {
-  cout << "Received Ctrl-C" << endl;
+  printw("Received Ctrl-C\n");
   finished = true;
 }
 
 int main(int argc, char **argv) {
+  // init ncurses
+  initscr();
+  // enter no delay mode
+  nodelay(stdscr, TRUE);
+  // disable echo
+  noecho();
+  // enable scrolling
+  scrollok(stdscr, TRUE);
+
   Verilated::commandArgs(argc, argv); // Remember args
   bool trace = false;
   char opt;
@@ -470,7 +514,7 @@ int main(int argc, char **argv) {
   VerilatedVcdC *tfp = NULL;
   if (trace) {
     Verilated::traceEverOn(true); // Verilator must compute traced signals
-    VL_PRINTF("Enabling waves...\n");
+    VL_PRINTF("> Enabling waves...\n");
     tfp = new VerilatedVcdC;
     top->trace(tfp, 99);   // Trace 99 levels of hierarchy
     tfp->open("dump.vcd"); // Open the dump file
@@ -478,25 +522,26 @@ int main(int argc, char **argv) {
 #endif
 
   top->reset = 1;
+  top->interrupts = 0;
 
   // init
   top->jtag_TCK = 1;
   top->jtag_TMS = 1;
   top->jtag_TDI = 1;
 
-  cout << "Starting simulation!\n";
+  printw("> Starting simulation!\n");
 
   uint64_t begin = get_time_us();
   uint64_t clocks = 0;
-  while (!Verilated::gotFinish() && main_time < timeout && !finished) {
-    if (main_time > 1000) {
+  while (!Verilated::gotFinish() && sim_time < timeout_cycles && !finished) {
+    if (sim_time > 1000) {
       top->reset = 0; // Deassert reset
     }
-    if ((main_time % 10) == 1) {
+    if ((sim_time % 10) == 1) {
       clocks++;
       top->clock = 1; // Toggle clock
     }
-    if ((main_time % 10) == 6) {
+    if ((sim_time % 10) == 6) {
       top->clock = 0;
       step_mem();
       step_mmio();
@@ -504,42 +549,43 @@ int main(int argc, char **argv) {
     top->eval(); // Evaluate model
 #if VM_TRACE
     if (tfp)
-      tfp->dump(main_time); // Create waveform trace for this timestamp
+      tfp->dump(sim_time); // Create waveform trace for this timestamp
 #endif
-    main_time++; // Time passes...
+    sim_time++; // Time passes...
   }
 
   uint64_t elapsed_us = get_time_us() - begin;
-  if (main_time >= timeout) {
-    cout << "Simulation terminated by timeout at time " << main_time
-         << " (cycle " << main_time / 10 << ")" << endl;
+  if (sim_time >= timeout_cycles) {
+    cout << "> Simulation terminated by timeout at time " << sim_time
+         << " (cycle " << sim_time / 10 << ")" << endl;
     return -1;
   } else {
-    cout << "Simulation completed at time " << main_time << " (cycle "
-         << main_time / 10 << ")" << endl;
+    cout << "> Simulation completed at time " << sim_time << " (cycle "
+         << sim_time / 10 << ")" << endl;
   }
-  cout << "Simulation speed " << (double)clocks * 1000000 / elapsed_us
+  cout << "> Simulation speed " << (double)clocks * 1000000 / elapsed_us
        << " mcycle/s" << endl;
 
   // Run for 10 more clocks
-  vluint64_t end_time = main_time + 100;
-  while (main_time < end_time) {
-    if ((main_time % 10) == 1) {
+  vluint64_t end_time = sim_time + 100;
+  while (sim_time < end_time) {
+    if ((sim_time % 10) == 1) {
       top->clock = 1; // Toggle clock
     }
-    if ((main_time % 10) == 6) {
+    if ((sim_time % 10) == 6) {
       top->clock = 0;
     }
     top->eval(); // Evaluate model
 #if VM_TRACE
     if (tfp)
-      tfp->dump(main_time); // Create waveform trace for this timestamp
+      tfp->dump(sim_time); // Create waveform trace for this timestamp
 #endif
-    main_time++; // Time passes...
+    sim_time++; // Time passes...
   }
 
 #if VM_TRACE
   if (tfp)
     tfp->close();
 #endif
+  endwin();
 }

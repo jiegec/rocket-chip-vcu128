@@ -10,6 +10,6 @@ make
 # boot to uboot
 ./Vtestbench_rocketchip ~/opensbi/build/platform/rocket-chip-vcu128-dual-core/firmware/fw_payload.bin 2>/dev/null
 # boot to uboot & linux
-# you need to add `bootdelay=0` and `bootcmd=bootm 0x80100000` to u-boot config
+# you need to run `bootm 0x80100000` in u-boot shell
 ./Vtestbench_rocketchip ~/opensbi/build/platform/rocket-chip-vcu128-dual-core/firmware/fw_payload.bin ~/linux/arch/riscv/boot/image-dual-core.itb 2>/dev/null
 ```

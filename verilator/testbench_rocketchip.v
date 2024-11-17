@@ -22,6 +22,7 @@
 module testbench_rocketchip(
     clock,
     reset,
+    interrupts,
 
     // MEM
     M_AXI_awready,
@@ -118,6 +119,7 @@ module testbench_rocketchip(
 
     input clock;
     input reset;
+    input [5:0] interrupts;
     
     // MEM
     input M_AXI_awready;
@@ -214,7 +216,7 @@ module testbench_rocketchip(
     rocketchip_wrapper dut (
         .clk(clock),
         .reset(reset),
-        .interrupts(0),
+        .interrupts(interrupts),
 
         .M_AXI_awready(M_AXI_awready),
         .M_AXI_awvalid(M_AXI_awvalid),
