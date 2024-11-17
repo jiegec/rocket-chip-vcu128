@@ -273,6 +273,14 @@ void step_mmio() {
     } else if (pending_read_addr == serial_addr + 0x4) {
       // Interrupt Enable Register
       r_data = 0;
+    } else if (pending_read_addr == serial_addr + 0x8) {
+      // Interrupt Status Register
+      uint64_t isr = 0;
+      if (serial_recv_fifo.size() > 0) {
+        // interrupt status
+        isr |= (1L << 0);
+      }
+      r_data = isr;
     } else if (pending_read_addr == serial_addr + 0xc) {
       // Line Control Register
       r_data = 0;
@@ -285,6 +293,9 @@ void step_mmio() {
         lsr |= (1L << 0);
       }
       r_data = lsr << 32;
+    } else if (pending_read_addr == serial_addr + 0x18) {
+      // Modem Status Register
+      r_data = 0;
     } else if (pending_read_addr == emac_addr + 0x504) {
       // MDIO Control Word (0x504)
       // bit 7: MDIO ready
