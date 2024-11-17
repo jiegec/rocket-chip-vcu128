@@ -30,9 +30,6 @@ double sc_time_stamp() { // Called by $time in Verilog
                          // what SystemC does
 }
 
-// TODO Provide command-line options like vcd filename, timeout count, etc.
-const uint64_t timeout_cycles = 1000000000L;
-
 // memory mapping
 typedef uint32_t mem_t;
 std::map<uint64_t, mem_t> memory;
@@ -300,7 +297,7 @@ void step_mmio() {
       // Unicast Address Word 1
       r_data = 0;
     } else {
-      printf("Unhandled mmio read from %lx\n", pending_read_addr);
+      printw("Unhandled mmio read from %lx\n", pending_read_addr);
       r_data = 0;
     }
 
@@ -397,7 +394,7 @@ void step_mmio() {
       } else if (pending_write_addr == emac_addr + 0x704) {
         // Unicast Address Word 1
       } else {
-        printf("Unhandled mmio write to %lx\n", pending_write_addr);
+        printw("Unhandled mmio write to %lx\n", pending_write_addr);
       }
 
       pending_write_addr += 1L << pending_write_size;
@@ -514,7 +511,7 @@ int main(int argc, char **argv) {
   VerilatedVcdC *tfp = NULL;
   if (trace) {
     Verilated::traceEverOn(true); // Verilator must compute traced signals
-    VL_PRINTF("> Enabling waves...\n");
+    printw("> Enabling waves...\n");
     tfp = new VerilatedVcdC;
     top->trace(tfp, 99);   // Trace 99 levels of hierarchy
     tfp->open("dump.vcd"); // Open the dump file
@@ -533,7 +530,7 @@ int main(int argc, char **argv) {
 
   uint64_t begin = get_time_us();
   uint64_t clocks = 0;
-  while (!Verilated::gotFinish() && sim_time < timeout_cycles && !finished) {
+  while (!Verilated::gotFinish() && !finished) {
     if (sim_time > 1000) {
       top->reset = 0; // Deassert reset
     }
@@ -555,16 +552,9 @@ int main(int argc, char **argv) {
   }
 
   uint64_t elapsed_us = get_time_us() - begin;
-  if (sim_time >= timeout_cycles) {
-    cout << "> Simulation terminated by timeout at time " << sim_time
-         << " (cycle " << sim_time / 10 << ")" << endl;
-    return -1;
-  } else {
-    cout << "> Simulation completed at time " << sim_time << " (cycle "
-         << sim_time / 10 << ")" << endl;
-  }
-  cout << "> Simulation speed " << (double)clocks * 1000000 / elapsed_us
-       << " mcycle/s" << endl;
+  printw("> Simulation completed at time %ld\n", sim_time);
+  printw("> Simulation speed %lf mcycle/s\n",
+         (double)clocks * 1000000 / elapsed_us);
 
   // Run for 10 more clocks
   vluint64_t end_time = sim_time + 100;
