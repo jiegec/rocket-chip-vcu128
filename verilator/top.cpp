@@ -392,11 +392,10 @@ void step_mmio() {
 }
 
 // load file
-void load_file(const std::string &path) {
+void load_file(const std::string &path, uint64_t addr = 0x80000000) {
   // load as bin
   FILE *fp = fopen(path.c_str(), "rb");
   assert(fp);
-  uint64_t addr = 0x80000000;
 
   // read whole file and pad to multiples of mem_t
   fseek(fp, 0, SEEK_END);
@@ -446,17 +445,23 @@ int main(int argc, char **argv) {
       trace = true;
       break;
     default: /* '?' */
-      fprintf(stderr, "Usage: %s [-t] memory_content\n", argv[0]);
+      fprintf(stderr, "Usage: %s [-t] memory_content [memory_content2]\n",
+              argv[0]);
       return 1;
     }
   }
 
   if (optind >= argc) {
-    fprintf(stderr, "Usage: %s [-t] memory_content\n", argv[0]);
+    fprintf(stderr, "Usage: %s [-t] memory_content [memory_content2]\n",
+            argv[0]);
     return 1;
   }
 
   load_file(argv[optind]);
+  // load linux FIT image
+  if (optind + 1 < argc) {
+    load_file(argv[optind + 1], 0x80100000);
+  }
   top = new Vtestbench_rocketchip;
 
   signal(SIGINT, ctrlc_handler);
