@@ -8,8 +8,8 @@ import com.goyeau.mill.scalafix.ScalafixModule
 
 // learned from https://github.com/OpenXiangShan/fudian/blob/main/build.sc
 val defaultVersions = Map(
-  "chisel" -> ("org.chipsalliance", "6.5.0", false),
-  "chisel-plugin" -> ("org.chipsalliance", "6.5.0", true),
+  "chisel" -> ("org.chipsalliance", "6.6.0", false),
+  "chisel-plugin" -> ("org.chipsalliance", "6.6.0", true),
   "paradise" -> ("org.scalamacros", "2.1.1", true),
   "json4s-jackson" -> ("org.json4s", "4.0.6", false),
   "chiseltest" -> ("edu.berkeley.cs", "0.6.0-RC3", false),
@@ -18,7 +18,7 @@ val defaultVersions = Map(
   "mainargs" -> ("com.lihaoyi", "0.5.0", false),
 )
 
-val commonScalaVersion = "2.13.10"
+val commonScalaVersion = "2.13.15"
 
 def getVersion(dep: String) = {
   val (org, ver, cross) = defaultVersions(dep)
