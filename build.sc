@@ -10,7 +10,6 @@ import com.goyeau.mill.scalafix.ScalafixModule
 val defaultVersions = Map(
   "chisel" -> ("org.chipsalliance", "6.6.0", false),
   "chisel-plugin" -> ("org.chipsalliance", "6.6.0", true),
-  "paradise" -> ("org.scalamacros", "2.1.1", true),
   "json4s-jackson" -> ("org.json4s", "4.0.6", false),
   "chiseltest" -> ("edu.berkeley.cs", "0.6.0-RC3", false),
   "scalatest" -> ("org.scalatest", "3.2.15", false),
