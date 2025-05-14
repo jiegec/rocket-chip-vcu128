@@ -45,7 +45,7 @@ trait CommonModule extends ScalaModule {
 
 object hardfloat extends CommonModule with SbtModule {
   override def millSourcePath =
-    os.pwd / "submodules" / "berkeley-hardfloat" / "hardfloat"
+    super.millSourcePath / ".."  / "submodules" / "berkeley-hardfloat" / "hardfloat"
 
   override def ivyDeps = super.ivyDeps() ++ Agg(
     getVersion("chisel")
@@ -58,12 +58,12 @@ object hardfloat extends CommonModule with SbtModule {
 
 object apiConfigChipsalliance extends CommonModule {
   override def millSourcePath =
-    os.pwd / "submodules" / "api-config-chipsalliance" / "cde"
+    super.millSourcePath / ".."  / "submodules" / "api-config-chipsalliance" / "cde"
 }
 
 object diplomacy extends CommonModule with ScalaModule {
   override def millSourcePath =
-    os.pwd / "submodules" / "diplomacy" / "diplomacy"
+    super.millSourcePath / ".."  / "submodules" / "diplomacy" / "diplomacy"
 
   override def ivyDeps = super.ivyDeps() ++ Agg(
     getVersion("chisel"),
@@ -81,7 +81,7 @@ object diplomacy extends CommonModule with ScalaModule {
 }
 
 object rocketChipMacros extends CommonModule {
-  override def millSourcePath = os.pwd / "submodules" / "rocket-chip" / "macros"
+  override def millSourcePath = super.millSourcePath / ".."  / "submodules" / "rocket-chip" / "macros"
 
   override def ivyDeps = super.ivyDeps() ++ Agg(
     ivy"org.scala-lang:scala-reflect:$commonScalaVersion"
@@ -89,7 +89,7 @@ object rocketChipMacros extends CommonModule {
 }
 
 object rocketChip extends CommonModule with SbtModule {
-  override def millSourcePath = os.pwd / "submodules" / "rocket-chip"
+  override def millSourcePath = super.millSourcePath / ".."  / "submodules" / "rocket-chip"
 
   override def ivyDeps = super.ivyDeps() ++ Agg(
     getVersion("chisel"),
@@ -115,7 +115,7 @@ object rocketChip extends CommonModule with SbtModule {
 }
 
 object boom extends CommonModule with SbtModule {
-  override def millSourcePath = os.pwd / "submodules" / "riscv-boom"
+  override def millSourcePath = super.millSourcePath / ".."  / "submodules" / "riscv-boom"
   override def moduleDeps = super.moduleDeps ++ Seq(rocketChip)
   override def scalacPluginIvyDeps = super.scalacPluginIvyDeps() ++ Agg(
     getVersion("chisel-plugin")
@@ -124,7 +124,7 @@ object boom extends CommonModule with SbtModule {
 
 object inclusiveCache extends CommonModule with ScalaModule {
   override def millSourcePath =
-    os.pwd / "submodules" / "rocket-chip-inclusive-cache" / "design" / "craft" / "inclusivecache"
+    super.millSourcePath / ".."  / "submodules" / "rocket-chip-inclusive-cache" / "design" / "craft" / "inclusivecache"
   override def moduleDeps = super.moduleDeps ++ Seq(rocketChip)
   override def scalacPluginIvyDeps = super.scalacPluginIvyDeps() ++ Agg(
     getVersion("chisel-plugin")
@@ -132,7 +132,7 @@ object inclusiveCache extends CommonModule with ScalaModule {
 }
 
 object vcu128 extends CommonModule with ScalafmtModule {
-  override def millSourcePath = os.pwd
+  override def millSourcePath = super.millSourcePath / ".."
 
   override def ivyDeps = super.ivyDeps() ++ Agg(
     getVersion("chisel"),
